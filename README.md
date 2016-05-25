@@ -1,7 +1,7 @@
 # Keg Pi (Raspbeery Pi)
 
 ## About
-It's a set of python packages that show you how much beer is left in your kegerator.  There are 3 applications that work together to do this: volumetracker, beerstats, and beerweb.  They all share a PostgreSQL instance and use it to keep tabs on your keg.
+Keg Pi is a set of python packages that show you how much beer is left in your kegerator.  There are 3 packages that work together to do this: volumetracker, beerstats, and beerweb.  They all share a PostgreSQL instance that is used to track the keg state over time.
 
 ## Modules 
 ### volumetracker
@@ -14,7 +14,12 @@ Uses the data stored by volumetracker to give you a readout of approximately how
 A small web application to manage current and past kegs.  This is where you can create new kegs and set the beer name to be shown on the display.
    
 ## Hardware
-Pi, screen, flow meter
+### Raspberry Pi
+Keg Pi was tested on a Raspberry Pi 2 model B running Raspbian Jessie but theoretically should run on pretty much any Raspberry Pi.
+
+### Screen
+
+### Flow Meter
 
 ## Installation
 1. Attach the flow meter and OLED display.  By default the application expects:
