@@ -22,8 +22,10 @@ A small web application to manage current and past kegs.  This is where you can 
 Keg Pi was tested on a Raspberry Pi 2 model B running Raspbian Jessie but theoretically should run on pretty much any Raspberry Pi.
 
 ### Screen
+Keg Pi was written to display stats on a 128x64 pixel SSD1306 OLED display.  [This was the one used in the Youtube link above](http://www.amazon.com/Diymall-Serial-128x64-Display-Arduino/dp/B00O2KDQBE/ref=pd_sim_147_2?ie=UTF8&dpID=51GAF1wgseL&dpSrc=sims&preST=_AC_UL160_SR160%2C160_&refRID=0ZQ1QTC52PPGAVBRC4Z0), however anything that can use the SSD1306 driver and can be connected to the Raspberry Pi via I2C should work.
 
 ### Flow Meter
+Keg Pi deducts from the total keg quantity based on the output of a flow meter attached to the Raspberry Pi's GPIO pins.  [This was the flow meter used in the Youtube video](http://www.amazon.com/Liquid-Flow-Meter--Plastic-Threaded/dp/B00K0TFZN8/ref=sr_1_cc_1?s=aps&ie=UTF8&qid=1464151428&sr=1-1-catcorr&keywords=flow+meter+adafruit)
 
 ## Installation
 1. Attach the flow meter and OLED display.  By default the application expects:
