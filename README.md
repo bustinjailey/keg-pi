@@ -3,7 +3,9 @@
 ## About
 It's a set of python packages that show you how much beer is left in your kegerator.  There are 3 applications that work together to do this: volumetracker, beerstats, and beerweb.  They all share a PostgreSQL instance and use it to keep tabs on your keg.
 
-[Video of Keg Pi in action](https://github.com/bustinjailey/keg-pi)
+Watch it in action:
+
+[![Video of Keg Pi in action](https://img.youtube.com/vi/SBuiSrTC2JU/0.jpg)](https://www.youtube.com/watch?v=SBuiSrTC2JU)
 
 ## Modules 
 ### volumetracker
