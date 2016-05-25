@@ -47,7 +47,8 @@ Keg Pi was written to display stats on a 128x64 pixel SSD1306 OLED display [like
     - `git clone https://github.com/bustinjailey/keg-pi.git`
 5. Run `cd keg-pi && sudo install.sh` and enter a password to be used for the database user when prompted.  The default is `raspberry` if you don't care to set your own password.
 
-The install script is designed to be run on a fresh Raspbian installation and does a few things
+The install script is designed to be run on a fresh Raspbian installation and does a few things:
+
 1. Installs PostgreSQL
 2. Creates the keg-pi database schema
 3. Installs various package dependencies
