@@ -93,3 +93,5 @@ ENV/
 .idea
 
 secrets.py
+
+node_modules/
