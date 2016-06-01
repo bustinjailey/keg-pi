@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -e
 INSTALL_DIR=${PWD}
-export KEG_PI_ROOT=${INSTALL_DIR}
 
 echo "Enter database user password:"
 read -s DB_PASSWORD

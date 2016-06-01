@@ -2,7 +2,6 @@
 # Reinstalls the keg-pi applications but does not touch core dependencies, the database, or the secrets.py file
 set -e
 INSTALL_DIR=${PWD}
-export KEG_PI_ROOT=${INSTALL_DIR}
 
 ADAFRUIT_PYTHON_GPIO_REPO_NAME="Adafruit_Python_GPIO"
 
