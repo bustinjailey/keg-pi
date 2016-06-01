@@ -120,9 +120,11 @@ logger = logging.getLogger(__name__)
 
 def log_keg_status(is_active):
     if is_active is True:
-        logger.debug("Keg active. Last active: {}".format(keg.last_updated_timestamp.isoformat("T")))
+        logger.debug("Keg active. \n\tLast active: {}\n\t{}".format(keg.last_updated_timestamp.isoformat("T"),
+                                                                    volume_change_since_display_refresh))
     else:
-        logger.debug("Keg inactive. Last active: {}".format(keg.last_updated_timestamp.isoformat("T")))
+        logger.debug("Keg inactive. \n\tLast active: {}\n\t{}".format(keg.last_updated_timestamp.isoformat("T"),
+                                                                      volume_change_since_display_refresh))
 
 
 def repaint_and_update_display():
@@ -141,12 +143,13 @@ while True:
             significant_volume_has_poured = volume_change_since_display_refresh > \
                                             volume_change_for_display_refresh_threshold
             if significant_volume_has_poured:
-                log_keg_status(True)
                 repaint_and_update_display()
                 volume_change_since_display_refresh = 0
                 volume_at_last_display_refresh = keg.current_volume
+                log_keg_status(True)
             else:
                 volume_change_since_display_refresh += keg.current_volume - volume_at_last_display_refresh
+                log_keg_status(False)
             # Go crazy with the updates during times of use for quickest display updates possible
             time.sleep(.1)
         else:
