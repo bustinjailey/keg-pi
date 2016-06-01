@@ -110,7 +110,6 @@ class OledBeerDisplay:
 
 keg = KegDataAccess.get_most_recent_active_keg()
 base_oled = OledBeerDisplay(KegDataAccess.get_beer_name(keg.beer_id))
-volume_change_since_display_refresh = 0
 volume_at_last_display_refresh = keg.current_volume
 volume_change_for_display_refresh_threshold = 0.010
 
@@ -120,11 +119,13 @@ logger = logging.getLogger(__name__)
 
 def log_keg_status(is_active):
     if is_active is True:
-        logger.debug("Keg active. \n\tLast active: {}\n\t{}".format(keg.last_updated_timestamp.isoformat("T"),
-                                                                    volume_change_since_display_refresh))
+        logger.debug("Keg active. \n\tLast active: {}\n\tVolume at last display refresh: {}".format(
+            keg.last_updated_timestamp.isoformat("T"),
+            volume_at_last_display_refresh))
     else:
-        logger.debug("Keg inactive. \n\tLast active: {}\n\t{}".format(keg.last_updated_timestamp.isoformat("T"),
-                                                                      volume_change_since_display_refresh))
+        logger.debug("Keg inactive. \n\tLast active: {}\n\tVolume at last display refresh: {}".format(
+            keg.last_updated_timestamp.isoformat("T"),
+            volume_at_last_display_refresh))
 
 
 def repaint_and_update_display():
@@ -139,17 +140,12 @@ while True:
     try:
         keg = KegDataAccess.get_most_recent_active_keg()
         keg_has_been_updated_recently = keg.last_updated_timestamp + timedelta(minutes=45) > datetime.now(timezone.utc)
-        if keg_has_been_updated_recently:
-            significant_volume_has_poured = volume_change_since_display_refresh > \
-                                            volume_change_for_display_refresh_threshold
-            if significant_volume_has_poured:
-                repaint_and_update_display()
-                volume_change_since_display_refresh = 0
-                volume_at_last_display_refresh = keg.current_volume
-                log_keg_status(True)
-            else:
-                volume_change_since_display_refresh += keg.current_volume - volume_at_last_display_refresh
-                log_keg_status(False)
+        significant_volume_has_poured = (keg.current_volume + volume_change_for_display_refresh_threshold) < \
+                                        volume_at_last_display_refresh
+        if keg_has_been_updated_recently and significant_volume_has_poured:
+            repaint_and_update_display()
+            volume_at_last_display_refresh = keg.current_volume
+            log_keg_status(True)
             # Go crazy with the updates during times of use for quickest display updates possible
             time.sleep(.1)
         else:
