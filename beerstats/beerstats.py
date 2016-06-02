@@ -161,5 +161,5 @@ while True:
 
         log_keg_status()
     except KeyboardInterrupt:
-        logger.info("\nExiting")
+        logger.info("Exiting")
         sys.exit()
