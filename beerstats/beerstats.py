@@ -62,7 +62,7 @@ class OledBeerDisplay:
                        fill=255)
 
     def draw_liters_remaining(self, liters_remaining):
-        formatted_liters_remaining = "{:>4.1f}L".format(liters_remaining)
+        formatted_liters_remaining = "{:>.2f}L".format(liters_remaining)
         w, h = self.draw.textsize(formatted_liters_remaining, self.stats_font)
         liters_remaining_start_position = 60 + self.liters_remaining_text_area_width - w
 
@@ -110,37 +110,56 @@ class OledBeerDisplay:
 
 keg = KegDataAccess.get_most_recent_active_keg()
 base_oled = OledBeerDisplay(KegDataAccess.get_beer_name(keg.beer_id))
-last_active_datetime = keg.last_updated_timestamp
+volume_at_last_display_refresh = keg.current_volume
+volume_change_for_display_refresh_threshold = 0.010
+has_significant_volume_recently_poured = False
 
 init_logging()
 logger = logging.getLogger(__name__)
 
 
-def log_keg_status(is_active):
-    if is_active is True:
-        logger.debug("Keg active. Last active: {}".format(last_active_datetime.isoformat("T")))
-    else:
-        logger.debug("Keg inactive. Last active: {}".format(last_active_datetime.isoformat("T")))
+def log_keg_status():
+    logger.debug("Keg {}. \n\tLast active: {}\n\tVolume at last display refresh: {}".format(
+        'active' if is_active else 'inactive',
+        keg.last_updated_timestamp.isoformat("T"),
+        volume_at_last_display_refresh))
 
 
+def repaint_and_update_display():
+    base_oled.clear_beers_remaining()
+    base_oled.clear_liters_remaining()
+    base_oled.draw_beers_remaining(get_whole_pint_count(keg.current_volume))
+    base_oled.draw_liters_remaining(keg.current_volume)
+    base_oled.update_display()
+
+
+logger.info("Starting main loop")
 while True:
     try:
         keg = KegDataAccess.get_most_recent_active_keg()
-        last_active_datetime = keg.last_updated_timestamp
-        if last_active_datetime + timedelta(minutes=45) > datetime.now(timezone.utc):
-            log_keg_status(True)
-            base_oled.clear_beers_remaining()
-            base_oled.clear_liters_remaining()
-            base_oled.draw_beers_remaining(get_whole_pint_count(keg.current_volume))
-            base_oled.draw_liters_remaining(keg.current_volume)
-            base_oled.update_display()
+        keg_has_been_updated_recently = keg.last_updated_timestamp + timedelta(minutes=45) > datetime.now(timezone.utc)
+        significant_volume_has_poured = (keg.current_volume + volume_change_for_display_refresh_threshold) < \
+                                        volume_at_last_display_refresh
+
+        if not keg_has_been_updated_recently:
+            has_significant_volume_recently_poured = False
+
+        if keg_has_been_updated_recently and (significant_volume_has_poured or has_significant_volume_recently_poured):
+            is_active = True
+            repaint_and_update_display()
+            volume_at_last_display_refresh = keg.current_volume
+            has_significant_volume_recently_poured = True
+
             # Go crazy with the updates during times of use for quickest display updates possible
             time.sleep(.1)
         else:
-            log_keg_status(False)
+            is_active = False
             base_oled.clear_display()
+
             # Sleep longer if not in use
-            time.sleep(1)
+            time.sleep(.5)
+
+        log_keg_status()
     except KeyboardInterrupt:
-        print("\nExiting")
+        logger.info("Exiting")
         sys.exit()

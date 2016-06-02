@@ -72,6 +72,7 @@ def save_keg_current_volume_to_database():
 # Start the database update timer by calling the method which updates and invokes itself after the set interval
 save_keg_current_volume_to_database()
 
+logger.info("Starting main loop")
 while True:
     try:
         if keg is None:
@@ -95,7 +96,7 @@ while True:
 
             time.sleep(1)
     except KeyboardInterrupt:
-        print("\nExiting")
+        logger.info("Exiting")
         is_shutting_down = True
         GPIO.cleanup()
         sys.exit()
