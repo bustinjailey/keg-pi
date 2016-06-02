@@ -118,15 +118,11 @@ init_logging()
 logger = logging.getLogger(__name__)
 
 
-def log_keg_status(is_active):
-    if is_active is True:
-        logger.debug("Keg active. \n\tLast active: {}\n\tVolume at last display refresh: {}".format(
-            keg.last_updated_timestamp.isoformat("T"),
-            volume_at_last_display_refresh))
-    else:
-        logger.debug("Keg inactive. \n\tLast active: {}\n\tVolume at last display refresh: {}".format(
-            keg.last_updated_timestamp.isoformat("T"),
-            volume_at_last_display_refresh))
+def log_keg_status():
+    logger.debug("Keg {}. \n\tLast active: {}\n\tVolume at last display refresh: {}".format(
+        'active' if is_active else 'inactive',
+        keg.last_updated_timestamp.isoformat("T"),
+        volume_at_last_display_refresh))
 
 
 def repaint_and_update_display():
@@ -148,17 +144,21 @@ while True:
             has_significant_volume_recently_poured = False
 
         if keg_has_been_updated_recently and (significant_volume_has_poured or has_significant_volume_recently_poured):
+            is_active = True
             repaint_and_update_display()
             volume_at_last_display_refresh = keg.current_volume
             has_significant_volume_recently_poured = True
-            log_keg_status(True)
+
             # Go crazy with the updates during times of use for quickest display updates possible
             time.sleep(.1)
         else:
-            log_keg_status(False)
+            is_active = False
             base_oled.clear_display()
+
             # Sleep longer if not in use
-            time.sleep(1)
+            time.sleep(.5)
+
+        log_keg_status()
     except KeyboardInterrupt:
         print("\nExiting")
         sys.exit()
