@@ -133,6 +133,7 @@ def repaint_and_update_display():
     base_oled.update_display()
 
 
+logger.info("Starting main loop")
 while True:
     try:
         keg = KegDataAccess.get_most_recent_active_keg()
@@ -160,5 +161,5 @@ while True:
 
         log_keg_status()
     except KeyboardInterrupt:
-        print("\nExiting")
+        logger.info("\nExiting")
         sys.exit()
