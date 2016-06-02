@@ -62,7 +62,7 @@ class OledBeerDisplay:
                        fill=255)
 
     def draw_liters_remaining(self, liters_remaining):
-        formatted_liters_remaining = "{:>.2f}L".format(liters_remaining)
+        formatted_liters_remaining = "{:>5.2f}L".format(liters_remaining)
         w, h = self.draw.textsize(formatted_liters_remaining, self.stats_font)
         liters_remaining_start_position = 60 + self.liters_remaining_text_area_width - w
 
