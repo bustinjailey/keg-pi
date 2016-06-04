@@ -1,27 +1,46 @@
 module.exports = {
-  // the main entry of our app
-  entry: ['./src/index.js'],
-  // output configuration
-  output: {
-    path: __dirname + '/build/',
-    publicPath: 'build/',
-    filename: 'build.js'
+  context: __dirname + '/app',
+  entry: {
+    javascript: './app.js',
+    html: './index.html'
   },
-  // how modules should be transformed
+  output: {
+    filename: 'app.js',
+    path: __dirname + '/dist'
+  },
   module: {
     loaders: [
-      // process *.vue files using vue-loader
-      {test: /\.vue$/, loader: 'vue'},
-      // process *.js files using babel-loader
-      // the exclude pattern is important so that we don't
-      // apply babel transform to all the dependencies!
-      {test: /\.js$/, loader: 'babel', exclude: /node_modules/}
+      {
+        test: /\.html$/,
+        exclude: /node_modules/,
+        loader: 'file?name=[name].[ext]'
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loaders: ['react-hot', 'babel-loader']
+      },
+      {
+        test: /\.less$/,
+        exclude: /node_modules/,
+        loader: 'style!css!less'
+      },
+      {
+        test: /\.(jpeg|jpg|png|gif|svg)$/i,
+        exclude: /node_modules/,
+        loaders: [
+          'file?hash=sha512&digest=hex&name=[hash].[ext]',
+          'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
+        ]
+      },
+      {
+        test: /\.ico$/,
+        exclude: /node_modules/,
+        loaders: [
+          'file?name=[name].[ext]&context=./images'
+        ]
+      }
     ]
   },
-  // configure babel-loader.
-  // this also applies to the JavaScript inside *.vue files
-  babel: {
-    presets: ['es2015'],
-    plugins: ['transform-runtime']
-  }
+  devtool: 'source-map'
 };
