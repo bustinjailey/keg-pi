@@ -1,5 +1,5 @@
 {
-  "name": "beerweb",
+  "name": "beerweb-ui",
   "version": "1.0.0",
   "description": "Captain's chair for the Keg Pi",
   "main": "app.js",
