@@ -7,7 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-
+import moment from 'momentjs';
 
 export default class MainPage extends React.Component {
   static childContextTypes = {
@@ -44,15 +44,36 @@ export default class MainPage extends React.Component {
     };
   }
 
-  getKegs() {
+  static getKegs() {
     var getKegsRequest = new XMLHttpRequest();
     getKegsRequest.open("GET", "http://localhost:3001/kegs", false);
     getKegsRequest.send(null);
-    return getKegsRequest.responseText;
+    return JSON.parse(getKegsRequest.responseText);
   }
 
   render() {
-    console.log(this.getKegs());
+    let tableHeaderRow = (
+      <TableRow>
+        <TableHeaderColumn>Keg Number</TableHeaderColumn>
+        <TableHeaderColumn>Full Capacity</TableHeaderColumn>
+        <TableHeaderColumn>Current Volume</TableHeaderColumn>
+        <TableHeaderColumn>Type of beer</TableHeaderColumn>
+        <TableHeaderColumn>Created</TableHeaderColumn>
+        <TableHeaderColumn>Last poured</TableHeaderColumn>
+      </TableRow>
+    );
+
+    let tableRows = [];
+    MainPage.getKegs().forEach((keg) => tableRows.push(
+      <TableRow>
+        <TableRowColumn>{keg.keg_id}</TableRowColumn>
+        <TableRowColumn>{keg.max_volume}</TableRowColumn>
+        <TableRowColumn>{keg.current_volume}</TableRowColumn>
+        <TableRowColumn>{keg.beer_id}</TableRowColumn>
+        <TableRowColumn>{moment(keg.created_timestamp).format()}</TableRowColumn>
+        <TableRowColumn>{keg.last_updated_timestamp}</TableRowColumn>
+      </TableRow>
+    ));
 
     return (
       <div className='content-wrapper'>
@@ -73,33 +94,10 @@ export default class MainPage extends React.Component {
         <Paper style={this.style} zDepth={1}>
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHeaderColumn>ID</TableHeaderColumn>
-                <TableHeaderColumn>Name</TableHeaderColumn>
-                <TableHeaderColumn>Status</TableHeaderColumn>
-              </TableRow>
+              {tableHeaderRow}
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableRowColumn>1</TableRowColumn>
-                <TableRowColumn>John Smith</TableRowColumn>
-                <TableRowColumn>Employed</TableRowColumn>
-              </TableRow>
-              <TableRow>
-                <TableRowColumn>2</TableRowColumn>
-                <TableRowColumn>Randal White</TableRowColumn>
-                <TableRowColumn>Unemployed</TableRowColumn>
-              </TableRow>
-              <TableRow>
-                <TableRowColumn>3</TableRowColumn>
-                <TableRowColumn>Stephanie Sanders</TableRowColumn>
-                <TableRowColumn>Employed</TableRowColumn>
-              </TableRow>
-              <TableRow>
-                <TableRowColumn>4</TableRowColumn>
-                <TableRowColumn>Steve Brown</TableRowColumn>
-                <TableRowColumn>Employed</TableRowColumn>
-              </TableRow>
+              {tableRows}
             </TableBody>
           </Table>
         </Paper>
