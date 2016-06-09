@@ -7,7 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import moment from 'momentjs';
+import moment from 'moment';
 
 export default class MainPage extends React.Component {
   static childContextTypes = {
@@ -30,7 +30,9 @@ export default class MainPage extends React.Component {
     super(props);
     injectTapEventPlugin();
     this.state = {
-      selectedDropDownMenuItem: 1
+      selectedDropDownMenuItem: 2,
+      kegs: [],
+      beers: []
     };
   }
 
@@ -44,6 +46,35 @@ export default class MainPage extends React.Component {
     };
   }
 
+  //noinspection JSMethodCanBeStatic
+  componentWillMount() {
+    let kegs = MainPage.getKegs();
+
+    let allBeerIds = kegs.map((keg)=> {
+      return keg.beer_id;
+    });
+
+    let beers = [];
+    allBeerIds.forEach((beerId) => {
+      if (!beers[beerId]) {
+        beers[beerId] = MainPage.getBeerById(beerId);
+      }
+    });
+
+    let allBeerStyleIds = beers.map((beer)=> {
+      return beer.beer_style_id;
+    });
+
+    let beerStyles = [];
+    allBeerStyleIds.forEach((beerStyleId) => {
+      if (!beerStyles[beerStyleId]) {
+        beerStyles[beerStyleId] = MainPage.getBeerStyleById(beerStyleId);
+      }
+    });
+
+    this.setState({kegs, beers, beerStyles});
+  }
+
   static getKegs() {
     var getKegsRequest = new XMLHttpRequest();
     getKegsRequest.open("GET", "http://localhost:3001/kegs", false);
@@ -51,29 +82,48 @@ export default class MainPage extends React.Component {
     return JSON.parse(getKegsRequest.responseText);
   }
 
+  static getBeerById(beerId) {
+    var getBeerNamesRequest = new XMLHttpRequest();
+    getBeerNamesRequest.open("GET", `http://localhost:3001/beers/${beerId}`, false);
+    getBeerNamesRequest.send(null);
+    return JSON.parse(getBeerNamesRequest.responseText)[0];
+  }
+
+  static getBeerStyleById(beerStyleId) {
+    var getBeerNamesRequest = new XMLHttpRequest();
+    getBeerNamesRequest.open("GET", `http://localhost:3001/beerStyles/${beerStyleId}`, false);
+    getBeerNamesRequest.send(null);
+    return JSON.parse(getBeerNamesRequest.responseText)[0];
+  }
+
   render() {
     let tableHeaderRow = (
       <TableRow>
-        <TableHeaderColumn>Keg Number</TableHeaderColumn>
-        <TableHeaderColumn>Full Capacity</TableHeaderColumn>
-        <TableHeaderColumn>Current Volume</TableHeaderColumn>
-        <TableHeaderColumn>Type of beer</TableHeaderColumn>
-        <TableHeaderColumn>Created</TableHeaderColumn>
         <TableHeaderColumn>Last poured</TableHeaderColumn>
+        <TableHeaderColumn>Brewery</TableHeaderColumn>
+        <TableHeaderColumn>Beer</TableHeaderColumn>
+        <TableHeaderColumn>Style</TableHeaderColumn>
+        <TableHeaderColumn>Remaining Volume</TableHeaderColumn>
+        <TableHeaderColumn>Capacity</TableHeaderColumn>
       </TableRow>
     );
 
     let tableRows = [];
-    MainPage.getKegs().forEach((keg) => tableRows.push(
-      <TableRow>
-        <TableRowColumn>{keg.keg_id}</TableRowColumn>
-        <TableRowColumn>{keg.max_volume}</TableRowColumn>
-        <TableRowColumn>{keg.current_volume}</TableRowColumn>
-        <TableRowColumn>{keg.beer_id}</TableRowColumn>
-        <TableRowColumn>{moment(keg.created_timestamp).format()}</TableRowColumn>
-        <TableRowColumn>{keg.last_updated_timestamp}</TableRowColumn>
+    this.state.kegs.forEach((keg) => {
+      let thisBeer = this.state.beers[keg.beer_id];
+      let thisBeerStyle = this.state.beerStyles[thisBeer.beer_style_id];
+
+      tableRows.push(
+        <TableRow key={keg.keg_id}>
+          <TableRowColumn>{moment(keg.last_updated_timestamp).fromNow()}</TableRowColumn>
+          <TableRowColumn>Fake Brewery Name</TableRowColumn>
+          <TableRowColumn>{thisBeer.full_name}</TableRowColumn>
+          <TableRowColumn>{thisBeerStyle.name}</TableRowColumn>
+          <TableRowColumn>{keg.current_volume}L</TableRowColumn>
+          <TableRowColumn>{keg.max_volume}L</TableRowColumn>
       </TableRow>
-    ));
+      )
+    });
 
     return (
       <div className='content-wrapper'>

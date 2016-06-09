@@ -5,8 +5,8 @@ var connectionString = "postgres://postgres:raspberry@keg-pi.local/postgres";
 var db = pgp(connectionString);
 
 module.exports = {
-  getKegs: function () {
+  getBeerStyleById: function (beerStyleId) {
     // Returns a promise
-    return db.query("SELECT * FROM keg;")
+    return db.query(`SELECT * FROM lu_beer_style WHERE beer_style_id = ${beerStyleId};`);
   }
 };

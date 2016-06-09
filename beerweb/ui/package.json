@@ -14,7 +14,7 @@
     "url": "https://github.com/bustinjailey/keg-pi.git"
   },
   "dependencies": {
-    "momentjs": "^1.1.7",
+    "moment": "^2.13.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0"
   },
