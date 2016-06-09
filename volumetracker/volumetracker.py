@@ -83,16 +83,10 @@ while True:
                 logger.debug("Waiting for keg")
                 time.sleep(60)
             else:
-                logger.debug("Got a new keg")
+                logger.debug("Have a keg")
                 last_saved_volume = keg.current_volume
                 # Starts the timer to track the new keg volume
                 save_keg_current_volume_to_database()
-        else:
-            # When empty, set current keg as inactive.  Application will go back to the waiting state
-            if keg.current_volume <= 0:
-                KegDataAccess.mark_keg_as_inactive(keg.keg_id)
-                logger.info("Keg ran out")
-                keg = None
 
             time.sleep(1)
     except KeyboardInterrupt:
