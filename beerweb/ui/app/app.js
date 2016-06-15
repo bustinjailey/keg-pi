@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Route, browserHistory} from 'react-router'
-import MainPage from './main-page';
+import MainPage from './components/main-page';
 import './styles/app.less'
 
 //require.context('./images', true, /^\.\//);

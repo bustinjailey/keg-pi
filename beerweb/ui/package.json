@@ -27,6 +27,7 @@
     "css-loader": "^0.23.1",
     "elemental": "^0.5.12",
     "file-loader": "^0.8.5",
+    "flux": "^2.1.1",
     "image-webpack-loader": "^1.6.3",
     "less": "^2.6.0",
     "less-loader": "^2.2.2",
