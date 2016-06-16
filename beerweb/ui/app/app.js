@@ -53,9 +53,9 @@ ReactDOM.render((
     <Router history={browserHistory}>
       <Route path='/' component={App}>
         <IndexRoute component={KegList}/>
-        <Route path="/kegs" component={KegList}/>
-        <Route path="/breweries" component={BreweryList}/>
-        <Route path="/beers" component={BeerList}/>
+        <Route path="kegs" component={KegList}/>
+        <Route path="breweries" component={BreweryList}/>
+        <Route path="beers" component={BeerList}/>
       </Route>
     </Router>),
   document.getElementById('contents')

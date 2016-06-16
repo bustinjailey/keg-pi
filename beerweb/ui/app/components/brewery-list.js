@@ -14,12 +14,9 @@ export default class BreweryList extends React.Component {
   }
 
   render() {
-    console.log(this.state.breweries);
-    
     let tableHeaderRow = (
       <TableRow>
         <TableHeaderColumn>Name</TableHeaderColumn>
-        <TableHeaderColumn>Location</TableHeaderColumn>
       </TableRow>
     );
 
@@ -28,7 +25,6 @@ export default class BreweryList extends React.Component {
       tableRows.push(
         <TableRow key={brewery.brewery_id}>
           <TableRowColumn>{brewery.name}</TableRowColumn>
-          <TableRowColumn>{brewery.brewery_id}</TableRowColumn>
         </TableRow>
       )
     });

@@ -26,7 +26,6 @@ class BeerStore extends EventEmitter {
   }
 
   static getBeer(beerId) {
-    console.log(beers);
     return beers.find(beer=>beer.beer_id === beerId);
   }
 
