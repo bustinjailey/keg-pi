@@ -42,5 +42,9 @@ module.exports = {
       }
     ]
   },
-  devtool: 'source-map'
+  devtool: 'source-map',
+  devServer: {
+    port: 8080,
+    historyApiFallback: true
+  }
 };
