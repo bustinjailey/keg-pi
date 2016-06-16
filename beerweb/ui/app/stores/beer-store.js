@@ -5,45 +5,37 @@ var beers = undefined;
 var beerStyles = undefined;
 
 class BeerStore extends EventEmitter {
-
-  constructor() {
-    super();
-  }
-
-  static setBeerById(beerId) {
+  static setBeers() {
     var getBeerNamesRequest = new XMLHttpRequest();
-    getBeerNamesRequest.open("GET", `http://localhost:3001/beers/${beerId}`, false);
+    getBeerNamesRequest.open("GET", `http://localhost:3001/beers`, false);
     getBeerNamesRequest.send(null);
-    if (!beers) {
-      beers = [];
-    }
 
-    beers[beerId] = JSON.parse(getBeerNamesRequest.responseText)[0];
+    beers = JSON.parse(getBeerNamesRequest.responseText);
   }
 
-  static setBeerStyleById(beerStyleId) {
+  static setBeerStyles() {
     var getBeerNamesRequest = new XMLHttpRequest();
-    getBeerNamesRequest.open("GET", `http://localhost:3001/beerStyles/${beerStyleId}`, false);
+    getBeerNamesRequest.open("GET", `http://localhost:3001/beerStyles`, false);
     getBeerNamesRequest.send(null);
-    if (!beerStyles) {
-      beerStyles = [];
-    }
 
-    beerStyles[beerStyleId] = JSON.parse(getBeerNamesRequest.responseText)[0];
+    beerStyles = JSON.parse(getBeerNamesRequest.responseText);
   }
 
-  static getBeerById(beerId) {
-    if (!beers) {
-      return undefined;
-    }
-    return beers[beerId];
+  static getBeers() {
+    return beers;
   }
 
-  static getBeerStyleById(beerStyleId) {
-    if (!beerStyles) {
-      return undefined;
-    }
-    return beerStyles[beerStyleId];
+  static getBeer(beerId) {
+    console.log(beers);
+    return beers.find(beer=>beer.beer_id === beerId);
+  }
+
+  static  getBeerStyles() {
+    return beerStyles;
+  }
+
+  static getBeerStyleName(beerStyleId) {
+    return beerStyles.find(beerStyle=>beerStyle.beer_style_id === beerStyleId).name;
   }
 
   emitChange() {

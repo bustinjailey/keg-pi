@@ -3,50 +3,39 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import moment from 'moment';
 import BeerStore from "../stores/beer-store";
 import KegStore from "../stores/keg-store";
+import BreweryStore from "../stores/brewery-store";
 
 export default class KegList extends React.Component {
   //noinspection JSMethodCanBeStatic
   componentWillMount() {
-    if (KegStore.getKegs() === undefined) {
-      KegStore.setKegs();
-    }
+    KegList.checkAndInitializeStores();
 
     let kegs = KegStore.getKegs();
-
-    let allBeerIds = kegs.map((keg)=> {
-      return keg.beer_id;
-    });
-
-    let beers = [];
-    allBeerIds.forEach((beerId) => {
-      if (!beers[beerId]) {
-        if (BeerStore.getBeerById(beerId) === undefined) {
-          BeerStore.setBeerById(beerId);
-        }
-
-        beers[beerId] = BeerStore.getBeerById(beerId);
-      }
-    });
-
-    let allBeerStyleIds = beers.map((beer)=> {
-      return beer.beer_style_id;
-    });
-
-    let beerStyles = [];
-    allBeerStyleIds.forEach((beerStyleId) => {
-      if (!beerStyles[beerStyleId]) {
-        if (BeerStore.getBeerStyleById(beerStyleId) === undefined) {
-          BeerStore.setBeerStyleById(beerStyleId);
-        }
-
-        beerStyles[beerStyleId] = BeerStore.getBeerStyleById(beerStyleId);
-      }
-    });
+    let beers = BeerStore.getBeers();
+    let beerStyles = BeerStore.getBeerStyles();
 
     this.setState({kegs, beers, beerStyles});
   }
 
+  static checkAndInitializeStores() {
+    if (!KegStore.getKegs()) {
+      KegStore.setKegs();
+    }
+
+    if (!BeerStore.getBeers()) {
+      BeerStore.setBeers();
+    }
+
+    if (!BeerStore.getBeerStyles()) {
+      BeerStore.setBeerStyles();
+    }
+  }
+
   render() {
+    if (!this.state.kegs || !this.state.beers || !this.state.beerStyles) {
+      return;
+    }
+
     let tableHeaderRow = (
       <TableRow>
         <TableHeaderColumn>Last poured</TableHeaderColumn>
@@ -60,15 +49,16 @@ export default class KegList extends React.Component {
 
     let tableRows = [];
     this.state.kegs.forEach((keg) => {
-      let thisBeer = this.state.beers[keg.beer_id];
-      let thisBeerStyle = this.state.beerStyles[thisBeer.beer_style_id];
+      let thisBeer = BeerStore.getBeer(keg.beer_id);
+      let beerStyleName = BeerStore.getBeerStyleName(thisBeer.beer_style_id);
+      let breweryName = BreweryStore.getBreweryName(thisBeer.brewery_id);
 
       tableRows.push(
         <TableRow key={keg.keg_id}>
           <TableRowColumn>{moment(keg.last_updated_timestamp).fromNow()}</TableRowColumn>
-          <TableRowColumn>Fake Brewery Name</TableRowColumn>
+          <TableRowColumn>{breweryName}</TableRowColumn>
           <TableRowColumn>{thisBeer.full_name}</TableRowColumn>
-          <TableRowColumn>{thisBeerStyle.name}</TableRowColumn>
+          <TableRowColumn>{beerStyleName}</TableRowColumn>
           <TableRowColumn>{keg.current_volume}L</TableRowColumn>
           <TableRowColumn>{keg.max_volume}L</TableRowColumn>
         </TableRow>

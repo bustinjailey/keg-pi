@@ -18,6 +18,9 @@ class KegStore extends EventEmitter {
   }
 
   static getKegs() {
+    if (!kegs) {
+      KegStore.setKegs();
+    }
     return kegs;
   }
 

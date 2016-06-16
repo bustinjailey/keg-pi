@@ -14,6 +14,8 @@ export default class BreweryList extends React.Component {
   }
 
   render() {
+    console.log(this.state.breweries);
+    
     let tableHeaderRow = (
       <TableRow>
         <TableHeaderColumn>Name</TableHeaderColumn>

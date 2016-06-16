@@ -1,6 +1,8 @@
 var getKegs = require('./kegs/keg-methods').getKegs;
 var getBeerById = require('./beers/beer-methods').getBeerById;
+var getAllBeers = require('./beers/beer-methods').getAllBeers;
 var getBeerStyleById = require('./beerStyles/beer-style-methods').getBeerStyleById;
+var getBeerStyles = require('./beerStyles/beer-style-methods').getBeerStyles;
 var getBreweries = require('./breweries/brewery-methods').getBreweries;
 
 var appRouter = function (app) {
@@ -16,8 +18,20 @@ var appRouter = function (app) {
     });
   });
 
+  app.get("/beers", function (request, response) {
+    getAllBeers().then(function (result) {
+      response.send(JSON.stringify(result));
+    });
+  });
+
   app.get("/beers/:beerId", function (request, response) {
     getBeerById(request.params.beerId).then(function (result) {
+      response.send(JSON.stringify(result));
+    });
+  });
+
+  app.get("/beerStyles", function (request, response) {
+    getBeerStyles().then(function (result) {
       response.send(JSON.stringify(result));
     });
   });

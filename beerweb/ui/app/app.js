@@ -4,6 +4,7 @@ import {Router, Route, IndexRoute, browserHistory} from 'react-router'
 import Navigation from './components/navigation';
 import KegList from './components/keg-list';
 import BreweryList from './components/brewery-list';
+import BeerList from './components/beer-list';
 import Paper from 'material-ui/Paper';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -54,6 +55,7 @@ ReactDOM.render((
         <IndexRoute component={KegList}/>
         <Route path="/kegs" component={KegList}/>
         <Route path="/breweries" component={BreweryList}/>
+        <Route path="/beers" component={BeerList}/>
       </Route>
     </Router>),
   document.getElementById('contents')
