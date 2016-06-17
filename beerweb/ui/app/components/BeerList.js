@@ -1,19 +1,13 @@
 import React from 'react';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
-import BeerStore from "../stores/beer-store";
-import BreweryStore from "../stores/brewery-store";
 
 
 export default class BeerList extends React.Component {
-  //noinspection JSMethodCanBeStatic
-  componentWillMount() {
-    if (BeerStore.getBeers() === undefined) {
-      BeerStore.setBeers();
-    }
-
-    let beers = BeerStore.getBeers();
-    this.setState({beers});
-  }
+  static propTypes = {
+    beers: React.PropTypes.object.isRequired,
+    beerStyles: React.PropTypes.object.isRequired,
+    breweries: React.PropTypes.object.isRequired
+  };
 
   render() {
     let tableHeaderRow = (
@@ -26,13 +20,21 @@ export default class BeerList extends React.Component {
     );
 
     let tableRows = [];
-    this.state.beers.forEach((beer) => {
+    this.props.beers.forEach((beer) => {
       tableRows.push(
         <TableRow key={beer.beer_id}>
-          <TableRowColumn>{BreweryStore.getBreweryName(beer.brewery_id)}</TableRowColumn>
-          <TableRowColumn>{beer.full_name}</TableRowColumn>
-          <TableRowColumn>{BeerStore.getBeerStyleName(beer.beer_style_id)}</TableRowColumn>
-          <TableRowColumn>{beer.name}</TableRowColumn>
+          <TableRowColumn>
+            {this.props.breweries.find(brewery =>brewery.brewery_id === beer.brewery_id)}
+          </TableRowColumn>
+          <TableRowColumn>
+            {beer.full_name}
+          </TableRowColumn>
+          <TableRowColumn>
+            {this.props.beerStyles.find(style => style.beer_style_id === beer.beer_style_id)}
+          </TableRowColumn>
+          <TableRowColumn>
+            {beer.name}
+          </TableRowColumn>
         </TableRow>
       )
     });

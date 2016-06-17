@@ -1,17 +1,10 @@
 import React from 'react';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
-import BreweryStore from "../stores/brewery-store";
 
 export default class BreweryList extends React.Component {
-  //noinspection JSMethodCanBeStatic
-  componentWillMount() {
-    if (BreweryStore.getBreweries() === undefined) {
-      BreweryStore.setBreweries();
-    }
-
-    let breweries = BreweryStore.getBreweries();
-    this.setState({breweries});
-  }
+  static propTypes = {
+    breweries: React.PropTypes.object.isRequired
+  };
 
   render() {
     let tableHeaderRow = (
@@ -21,7 +14,7 @@ export default class BreweryList extends React.Component {
     );
 
     let tableRows = [];
-    this.state.breweries.forEach((brewery) => {
+    this.props.breweries.forEach((brewery) => {
       tableRows.push(
         <TableRow key={brewery.brewery_id}>
           <TableRowColumn>{brewery.name}</TableRowColumn>
