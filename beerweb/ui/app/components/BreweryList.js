@@ -3,8 +3,14 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 
 export default class BreweryList extends React.Component {
   static propTypes = {
-    breweries: React.PropTypes.object.isRequired
+    breweries: React.PropTypes.array.isRequired,
+    onComponentMount: React.PropTypes.func.isRequired
   };
+
+  //noinspection JSMethodCanBeStatic
+  componentDidMount() {
+    this.props.onComponentMount();
+  }
 
   render() {
     let tableHeaderRow = (

@@ -4,12 +4,26 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 
 export default class BeerList extends React.Component {
   static propTypes = {
-    beers: React.PropTypes.object.isRequired,
-    beerStyles: React.PropTypes.object.isRequired,
-    breweries: React.PropTypes.object.isRequired
+    beers: React.PropTypes.array.isRequired,
+    beerStyles: React.PropTypes.array.isRequired,
+    breweries: React.PropTypes.array.isRequired,
+    onComponentMount: React.PropTypes.func.isRequired
   };
 
+  //noinspection JSMethodCanBeStatic
+  componentDidMount() {
+    this.props.onComponentMount();
+  }
+
   render() {
+    let isDataReady = true;
+    if (this.props.breweries.length === 0 ||
+        this.props.beers.length === 0 ||
+        this.props.beerStyles.length === 0 ||
+        this.props.breweries.length === 0) {
+      isDataReady = false;
+    }
+
     let tableHeaderRow = (
       <TableRow>
         <TableHeaderColumn>Brewery</TableHeaderColumn>
@@ -20,24 +34,26 @@ export default class BeerList extends React.Component {
     );
 
     let tableRows = [];
-    this.props.beers.forEach((beer) => {
-      tableRows.push(
-        <TableRow key={beer.beer_id}>
-          <TableRowColumn>
-            {this.props.breweries.find(brewery =>brewery.brewery_id === beer.brewery_id)}
-          </TableRowColumn>
-          <TableRowColumn>
-            {beer.full_name}
-          </TableRowColumn>
-          <TableRowColumn>
-            {this.props.beerStyles.find(style => style.beer_style_id === beer.beer_style_id)}
-          </TableRowColumn>
-          <TableRowColumn>
-            {beer.name}
-          </TableRowColumn>
-        </TableRow>
-      )
-    });
+    if (isDataReady) {
+      this.props.beers.forEach((beer) => {
+        tableRows.push(
+          <TableRow key={beer.beer_id}>
+            <TableRowColumn>
+              {this.props.breweries.find(brewery =>brewery.brewery_id === beer.brewery_id).name}
+            </TableRowColumn>
+            <TableRowColumn>
+              {beer.full_name}
+            </TableRowColumn>
+            <TableRowColumn>
+              {this.props.beerStyles.find(style => style.beer_style_id === beer.beer_style_id).name}
+            </TableRowColumn>
+            <TableRowColumn>
+              {beer.name}
+            </TableRowColumn>
+          </TableRow>
+        )
+      });
+    }
 
     return (
       <div className='list-wrapper'>

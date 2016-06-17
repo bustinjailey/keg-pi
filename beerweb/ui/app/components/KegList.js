@@ -4,11 +4,17 @@ import moment from 'moment';
 
 export default class KegList extends React.Component {
   static propTypes = {
-    beers: React.PropTypes.object.isRequired,
-    beerStyles: React.PropTypes.object.isRequired,
-    breweries: React.PropTypes.object.isRequired,
-    kegs: React.PropTypes.object.isRequired
+    beers: React.PropTypes.array.isRequired,
+    beerStyles: React.PropTypes.array.isRequired,
+    breweries: React.PropTypes.array.isRequired,
+    kegs: React.PropTypes.array.isRequired,
+    onComponentMount: React.PropTypes.func.isRequired
   };
+
+  //noinspection JSMethodCanBeStatic
+  componentDidMount() {
+    this.props.onComponentMount();
+  }
 
   render() {
     let tableHeaderRow = (
@@ -25,8 +31,8 @@ export default class KegList extends React.Component {
     let tableRows = [];
     this.props.kegs.forEach((keg) => {
       let thisBeer = this.props.beers.find(beer => beer.beer_id === keg.beer_id);
-      let beerStyleName = this.props.beerStyles.find(style => style.beer_style_id === thisBeer.beer_style_id);
-      let breweryName = this.props.breweries.find(brewery => brewery.brewery_id === thisBeer.brewery_id);
+      let beerStyleName = this.props.beerStyles.find(style => style.beer_style_id === thisBeer.beer_style_id).name;
+      let breweryName = this.props.breweries.find(brewery => brewery.brewery_id === thisBeer.brewery_id).name;
 
       tableRows.push(
         <TableRow key={keg.keg_id}>

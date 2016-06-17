@@ -1,5 +1,6 @@
 import {connect} from 'react-redux'
 import BreweryList from '../components/BreweryList'
+import {fetchBreweriesIfNeeded} from '../actions';
 
 const getVisibleBreweries = (breweries, filter) => {
   switch (filter) {
@@ -19,6 +20,14 @@ const mapStateToProps = (state) => {
   }
 };
 
-const VisibleTodoList = connect(mapStateToProps)(BreweryList);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onComponentMount: ()=> {
+      dispatch(fetchBreweriesIfNeeded());
+    }
+  }
+};
 
-export default VisibleTodoList
+const VisibleBreweryList = connect(mapStateToProps, mapDispatchToProps)(BreweryList);
+
+export default VisibleBreweryList;
