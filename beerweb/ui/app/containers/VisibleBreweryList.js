@@ -1,22 +1,10 @@
 import {connect} from 'react-redux'
 import BreweryList from '../components/BreweryList'
-import {fetchBreweriesIfNeeded} from '../actions';
-
-const getVisibleBreweries = (breweries, filter) => {
-  switch (filter) {
-    case 'SHOW_ALL':
-      return breweries;
-    /*
-     If we wanted to filter...
-     case 'SHOW_ACTIVE':
-     return todos.filter(t => !t.completed)
-     */
-  }
-};
+import {fetchBreweriesIfNeeded, addBrewery, updateBrewery} from '../actions';
 
 const mapStateToProps = (state) => {
   return {
-    breweries: getVisibleBreweries(state.breweries, state.breweryVisibilityFilter)
+    breweries: state.breweries
   }
 };
 
@@ -24,6 +12,15 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onComponentMount: ()=> {
       dispatch(fetchBreweriesIfNeeded());
+    },
+    onAddBrewery: ()=> {
+      dispatch(addBrewery())
+    },
+    onUpdateBrewery: (breweryId, name)=> {
+      dispatch(updateBrewery(breweryId, name))
+    },
+    onSaveNewBreweries: ()=> {
+      //dispatch(saveNewBreweries)
     }
   }
 };

@@ -12,6 +12,8 @@ export const REQUEST_BEER_STYLES = 'REQUEST_BEER_STYLES';
 export const RECEIVE_BEER_STYLES = 'RECEIVE_BEER_STYLES';
 export const REQUEST_KEGS = 'REQUEST_KEGS';
 export const RECEIVE_KEGS = 'RECEIVE_KEGS';
+export const ADD_BREWERY = 'ADD_BREWERY';
+export const UPDATE_BREWERY = 'UPDATE_BREWERY';
 
 /*
  * other constants
@@ -124,7 +126,7 @@ function shouldFetchArrayType(arrayFromState) {
 
 export function fetchBreweriesIfNeeded() {
   return (dispatch, getState) => {
-    if (shouldFetchArrayType(getState().breweries)) {
+    if (shouldFetchArrayType(getState().breweries.items)) {
       return dispatch(fetchBreweries());
     }
   }
@@ -151,5 +153,19 @@ export function fetchKegsIfNeeded() {
     if (shouldFetchArrayType(getState().kegs)) {
       return dispatch(fetchKegs());
     }
+  }
+}
+
+export function addBrewery() {
+  return {
+    type: ADD_BREWERY
+  }
+}
+
+export function updateBrewery(breweryId, name) {
+  return {
+    type: UPDATE_BREWERY,
+    breweryId,
+    name
   }
 }

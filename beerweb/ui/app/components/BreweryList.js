@@ -1,10 +1,14 @@
 import React from 'react';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import {RaisedButton, TextField} from 'material-ui';
 
 export default class BreweryList extends React.Component {
   static propTypes = {
-    breweries: React.PropTypes.array.isRequired,
-    onComponentMount: React.PropTypes.func.isRequired
+    breweries: React.PropTypes.object.isRequired,
+    onComponentMount: React.PropTypes.func.isRequired,
+    onAddBrewery: React.PropTypes.func.isRequired,
+    onUpdateBrewery: React.PropTypes.func.isRequired,
+    onSaveNewBreweries: React.PropTypes.func.isRequired
   };
 
   //noinspection JSMethodCanBeStatic
@@ -20,7 +24,7 @@ export default class BreweryList extends React.Component {
     );
 
     let tableRows = [];
-    this.props.breweries.forEach((brewery) => {
+    this.props.breweries.items.forEach((brewery) => {
       tableRows.push(
         <TableRow key={brewery.brewery_id}>
           <TableRowColumn>{brewery.name}</TableRowColumn>
@@ -28,16 +32,34 @@ export default class BreweryList extends React.Component {
       )
     });
 
+    this.props.breweries.newItems.forEach((brewery) => {
+      tableRows.push(
+        <TableRow key={brewery.brewery_id}>
+          <TableRowColumn>
+            <TextField hintText="Brewery name"
+                       onChange={(event, value) => this.props.onUpdateBrewery(brewery.brewery_id, value)}
+                       value={brewery.name ? brewery.name : ""}
+            />
+          </TableRowColumn>
+        </TableRow>
+      )
+    });
+
     return (
       <div className='list-wrapper'>
-        <Table>
-          <TableHeader>
+        <Table selectable={false}>
+          <TableHeader displaySelectAll={false}
+                       adjustForCheckbox={false}>
             {tableHeaderRow}
           </TableHeader>
-          <TableBody>
+          <TableBody displayRowCheckbox={false}>
             {tableRows}
           </TableBody>
         </Table>
+        <br/>
+        {this.props.breweries.isUiDirty
+          ? <RaisedButton label="Save" onMouseUp={this.props.onSaveNewBreweries}/>
+          : <RaisedButton label="Add Brewery" onMouseUp={this.props.onAddBrewery}/>}
       </div>
     )
   }

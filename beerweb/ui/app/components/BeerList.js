@@ -6,7 +6,7 @@ export default class BeerList extends React.Component {
   static propTypes = {
     beers: React.PropTypes.array.isRequired,
     beerStyles: React.PropTypes.array.isRequired,
-    breweries: React.PropTypes.array.isRequired,
+    breweries: React.PropTypes.object.isRequired,
     onComponentMount: React.PropTypes.func.isRequired
   };
 
@@ -17,10 +17,9 @@ export default class BeerList extends React.Component {
 
   render() {
     let isDataReady = true;
-    if (this.props.breweries.length === 0 ||
+    if (this.props.breweries.items.length === 0 ||
         this.props.beers.length === 0 ||
-        this.props.beerStyles.length === 0 ||
-        this.props.breweries.length === 0) {
+        this.props.beerStyles.length === 0) {
       isDataReady = false;
     }
 
@@ -39,7 +38,7 @@ export default class BeerList extends React.Component {
         tableRows.push(
           <TableRow key={beer.beer_id}>
             <TableRowColumn>
-              {this.props.breweries.find(brewery =>brewery.brewery_id === beer.brewery_id).name}
+              {this.props.breweries.items.find(brewery =>brewery.brewery_id === beer.brewery_id).name}
             </TableRowColumn>
             <TableRowColumn>
               {beer.full_name}

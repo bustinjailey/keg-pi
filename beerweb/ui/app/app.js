@@ -22,7 +22,8 @@ export default class App extends React.Component {
 
   static paperStyle = {
     textAlign: 'center',
-    display: 'inline-block'
+    display: 'inline-block',
+    paddingBottom: '25px'
   };
 
   static defaultProps = {

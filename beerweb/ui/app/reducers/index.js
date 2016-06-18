@@ -1,6 +1,21 @@
 import {combineReducers} from 'redux'
 import {VisibilityFilters, SET_BREWERY_VISIBILITY_FILTER} from '../actions'
-import {RECEIVE_BREWERIES, RECEIVE_BEERS, RECEIVE_BEER_STYLES, RECEIVE_KEGS} from "../actions/index";
+import {
+  RECEIVE_BREWERIES,
+  RECEIVE_BEERS,
+  RECEIVE_BEER_STYLES,
+  RECEIVE_KEGS,
+  ADD_BREWERY,
+  UPDATE_BREWERY
+} from "../actions/index";
+
+// The brewery_id will be discarded by the DB in favor of the PK value when it is persisted
+function getEmptyBrewery() {
+  return {
+    brewery_id: "new" + Math.floor(Math.random() * (500)),
+    name: undefined
+  };
+}
 
 function beers(state = [], action) {
   switch (action.type) {
@@ -11,10 +26,25 @@ function beers(state = [], action) {
   }
 }
 
-function breweries(state = [], action) {
+function breweries(state = {
+  items: [],
+  newItems: [],
+  isUiDirty: false
+}, action) {
   switch (action.type) {
     case RECEIVE_BREWERIES:
-      return action.breweries;
+      return Object.assign({}, state, {
+        items: action.breweries
+      });
+    case ADD_BREWERY:
+      return Object.assign({}, state, {
+        isUiDirty: true,
+        newItems: [...state.newItems, getEmptyBrewery()]
+      });
+    case UPDATE_BREWERY:
+      let newState = Object.assign({}, state);
+      newState.newItems.find(item=>item.brewery_id === action.breweryId).name = action.name;
+      return newState;
     default:
       return state;
   }
