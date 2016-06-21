@@ -1,6 +1,14 @@
 import {connect} from 'react-redux'
 import BreweryList from '../components/BreweryList'
-import {fetchBreweriesIfNeeded, addBrewery, updateBrewery, pageUnmounted, postBreweries} from '../actions';
+import {
+  fetchBreweriesIfNeeded,
+  addBrewery,
+  updateBrewery,
+  pageUnmounted,
+  postBreweries,
+  putBrewery,
+  setRowAsEditable
+} from '../actions';
 import {PageNames} from '../actions/constants'
 
 const mapStateToProps = (state) => {
@@ -14,17 +22,26 @@ const mapDispatchToProps = (dispatch) => {
     onComponentMount: ()=> {
       dispatch(fetchBreweriesIfNeeded());
     },
-    onAddBrewery: ()=> {
+    onComponentUpdate: ()=> {
+      dispatch(fetchBreweriesIfNeeded());
+    },
+    onAddRow: ()=> {
       dispatch(addBrewery())
     },
-    onUpdateBrewery: (breweryId, name)=> {
-      dispatch(updateBrewery(breweryId, name))
+    onBreweryNameChanged: (breweryId, name, isExistingBrewery)=> {
+      dispatch(updateBrewery(breweryId, name, isExistingBrewery))
     },
     onSaveNewBreweries: (newBreweries)=> {
       dispatch(postBreweries(newBreweries))
     },
     onComponentUnmount: ()=> {
       dispatch(pageUnmounted(PageNames.BREWERY_LIST))
+    },
+    toggleRowEdit: (breweryId)=> {
+      dispatch(setRowAsEditable(PageNames.BREWERY_LIST, breweryId))
+    },
+    onSaveEditedRow: (brewery)=> {
+      dispatch(putBrewery(brewery));
     }
   }
 };

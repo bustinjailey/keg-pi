@@ -3,9 +3,8 @@ import {
   SET_BREWERY_VISIBILITY_FILTER,
   REQUEST_BREWERIES,
   ADD_BREWERY,
-  UPDATE_BREWERY,
+  UPDATE_BREWERY_NAME_LOCALLY,
   PAGE_UNMOUNTED,
-  USER_SAVE_ACTION,
   RECEIVE_BREWERIES,
   REQUEST_BEERS,
   RECEIVE_BEERS,
@@ -13,7 +12,9 @@ import {
   RECEIVE_BEER_STYLES,
   REQUEST_KEGS,
   RECEIVE_KEGS,
-  POST_BREWERIES_SUCCESS
+  POST_BREWERIES_SUCCESS,
+  PUT_BREWERY_SUCCESS,
+  SET_ROW_AS_EDITABLE
 
 } from './constants/ActionTypes';
 
@@ -91,8 +92,8 @@ function fetchBreweries() {
   return dispatch => {
     dispatch(requestBreweries());
     return fetch('http://localhost:3001/breweries', {method: 'GET'})
-    .then(response => response.json())
-    .then(json => dispatch(receiveBreweries(json)));
+      .then(response => response.json())
+      .then(json => dispatch(receiveBreweries(json)));
   }
 }
 
@@ -100,8 +101,8 @@ function fetchBeers() {
   return dispatch => {
     dispatch(requestBeers());
     return fetch('http://localhost:3001/beers', {method: 'GET'})
-    .then(response => response.json())
-    .then(json => dispatch(receiveBeers(json)));
+      .then(response => response.json())
+      .then(json => dispatch(receiveBeers(json)));
   }
 }
 
@@ -109,8 +110,8 @@ function fetchBeerStyles() {
   return dispatch => {
     dispatch(requestBeerStyles());
     return fetch('http://localhost:3001/beerStyles', {method: 'GET'})
-    .then(response => response.json())
-    .then(json => dispatch(receiveBeerStyles(json)));
+      .then(response => response.json())
+      .then(json => dispatch(receiveBeerStyles(json)));
   }
 }
 
@@ -118,8 +119,8 @@ function fetchKegs() {
   return dispatch => {
     dispatch(requestKegs());
     return fetch('http://localhost:3001/kegs', {method: 'GET'})
-    .then(response => response.json())
-    .then(json => dispatch(receiveKegs(json)));
+      .then(response => response.json())
+      .then(json => dispatch(receiveKegs(json)));
   }
 }
 
@@ -165,17 +166,25 @@ export function addBrewery() {
   }
 }
 
-export function updateBrewery(breweryId, name) {
+export function updateBrewery(breweryId, name, isExistingBrewery) {
   return {
-    type: UPDATE_BREWERY,
+    type: UPDATE_BREWERY_NAME_LOCALLY,
     breweryId,
-    name
+    name,
+    isExistingBrewery
   }
 }
 
 function breweriesPostedSuccessfully() {
   return {
     type: POST_BREWERIES_SUCCESS
+  };
+}
+
+function breweryPutSuccessfully(breweryId) {
+  return {
+    type: PUT_BREWERY_SUCCESS,
+    breweryId
   };
 }
 
@@ -188,7 +197,21 @@ export function postBreweries(breweries) {
         'Content-Type': 'application/json'
       })
     })
-    .then(dispatch(breweriesPostedSuccessfully()));
+      .then(dispatch(breweriesPostedSuccessfully()));
+  };
+}
+
+
+export function putBrewery(brewery) {
+  return (dispatch) => {
+    return fetch(`http://localhost:3001/breweries/${brewery.brewery_id}`, {
+      method: 'PUT',
+      body: JSON.stringify(brewery),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    })
+      .then(dispatch(breweryPutSuccessfully(brewery.brewery_id)));
   };
 }
 
@@ -196,6 +219,14 @@ export function pageUnmounted(pageName) {
   return {
     type: PAGE_UNMOUNTED,
     pageName: pageName
+  }
+}
+
+export function setRowAsEditable(pageName, rowId) {
+  return {
+    type: SET_ROW_AS_EDITABLE,
+    pageName: pageName,
+    rowId: rowId
   }
 }
 
