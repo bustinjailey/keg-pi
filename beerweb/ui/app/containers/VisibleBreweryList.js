@@ -1,6 +1,7 @@
 import {connect} from 'react-redux'
 import BreweryList from '../components/BreweryList'
-import {fetchBreweriesIfNeeded, addBrewery, updateBrewery} from '../actions';
+import {fetchBreweriesIfNeeded, addBrewery, updateBrewery, pageUnmounted, postBreweries} from '../actions';
+import {PageNames} from '../actions/constants'
 
 const mapStateToProps = (state) => {
   return {
@@ -19,8 +20,11 @@ const mapDispatchToProps = (dispatch) => {
     onUpdateBrewery: (breweryId, name)=> {
       dispatch(updateBrewery(breweryId, name))
     },
-    onSaveNewBreweries: ()=> {
-      //dispatch(saveNewBreweries)
+    onSaveNewBreweries: (newBreweries)=> {
+      dispatch(postBreweries(newBreweries))
+    },
+    onComponentUnmount: ()=> {
+      dispatch(pageUnmounted(PageNames.BREWERY_LIST))
     }
   }
 };

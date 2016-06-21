@@ -6,7 +6,8 @@ import {
   RECEIVE_BEER_STYLES,
   RECEIVE_KEGS,
   ADD_BREWERY,
-  UPDATE_BREWERY
+  UPDATE_BREWERY,
+  PAGE_UNMOUNTED
 } from "../actions/index";
 
 // The brewery_id will be discarded by the DB in favor of the PK value when it is persisted
@@ -45,6 +46,11 @@ function breweries(state = {
       let newState = Object.assign({}, state);
       newState.newItems.find(item=>item.brewery_id === action.breweryId).name = action.name;
       return newState;
+    case PAGE_UNMOUNTED:
+      return Object.assign({}, state, {
+        newItems: [],
+        isUiDirty: false
+      });
     default:
       return state;
   }

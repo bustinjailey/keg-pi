@@ -8,12 +8,17 @@ export default class BreweryList extends React.Component {
     onComponentMount: React.PropTypes.func.isRequired,
     onAddBrewery: React.PropTypes.func.isRequired,
     onUpdateBrewery: React.PropTypes.func.isRequired,
-    onSaveNewBreweries: React.PropTypes.func.isRequired
+    onSaveNewBreweries: React.PropTypes.func.isRequired,
+    onComponentUnmount: React.PropTypes.func.isRequired
   };
 
   //noinspection JSMethodCanBeStatic
   componentDidMount() {
     this.props.onComponentMount();
+  }
+
+  componentWillUnmount() {
+    this.props.onComponentUnmount();
   }
 
   render() {
@@ -58,8 +63,11 @@ export default class BreweryList extends React.Component {
         </Table>
         <br/>
         {this.props.breweries.isUiDirty
-          ? <RaisedButton label="Save" onMouseUp={this.props.onSaveNewBreweries}/>
-          : <RaisedButton label="Add Brewery" onMouseUp={this.props.onAddBrewery}/>}
+          ?
+         <RaisedButton label="Save" onMouseUp={() => this.props.onSaveNewBreweries(this.props.breweries.newItems)}
+                       backgroundColor="#a4c639"
+                       labelColor="#ffffff"/>
+          : <RaisedButton label="Add Brewery" onMouseUp={this.props.onAddBrewery} primary={true}/>}
       </div>
     )
   }

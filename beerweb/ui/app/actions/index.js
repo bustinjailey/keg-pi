@@ -1,19 +1,22 @@
 import fetch from 'isomorphic-fetch'
+import {
+  SET_BREWERY_VISIBILITY_FILTER,
+  REQUEST_BREWERIES,
+  ADD_BREWERY,
+  UPDATE_BREWERY,
+  PAGE_UNMOUNTED,
+  USER_SAVE_ACTION,
+  RECEIVE_BREWERIES,
+  REQUEST_BEERS,
+  RECEIVE_BEERS,
+  REQUEST_BEER_STYLES,
+  RECEIVE_BEER_STYLES,
+  REQUEST_KEGS,
+  RECEIVE_KEGS,
+  POST_BREWERIES_SUCCESS
 
-/*
- * action types
- */
-export const SET_BREWERY_VISIBILITY_FILTER = 'SET_BREWERY_VISIBILITY_FILTER';
-export const REQUEST_BREWERIES = 'REQUEST_BREWERIES';
-export const RECEIVE_BREWERIES = 'RECEIVE_BREWERIES';
-export const REQUEST_BEERS = 'REQUEST_BEERS';
-export const RECEIVE_BEERS = 'RECEIVE_BEERS';
-export const REQUEST_BEER_STYLES = 'REQUEST_BEER_STYLES';
-export const RECEIVE_BEER_STYLES = 'RECEIVE_BEER_STYLES';
-export const REQUEST_KEGS = 'REQUEST_KEGS';
-export const RECEIVE_KEGS = 'RECEIVE_KEGS';
-export const ADD_BREWERY = 'ADD_BREWERY';
-export const UPDATE_BREWERY = 'UPDATE_BREWERY';
+} from './constants/ActionTypes';
+
 
 /*
  * other constants
@@ -169,3 +172,31 @@ export function updateBrewery(breweryId, name) {
     name
   }
 }
+
+function breweriesPostedSuccessfully() {
+  return {
+    type: POST_BREWERIES_SUCCESS
+  };
+}
+
+export function postBreweries(breweries) {
+  return (dispatch) => {
+    return fetch('http://localhost:3001/breweries', {
+      method: 'POST',
+      body: JSON.stringify(breweries),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    })
+    .then(dispatch(breweriesPostedSuccessfully()));
+  };
+}
+
+export function pageUnmounted(pageName) {
+  return {
+    type: PAGE_UNMOUNTED,
+    pageName: pageName
+  }
+}
+
+export * from "./constants/ActionTypes";

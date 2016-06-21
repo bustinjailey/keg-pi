@@ -8,5 +8,12 @@ module.exports = {
   getBreweries: function () {
     // Returns a promise
     return db.query(`SELECT * FROM lu_brewery`);
+  },
+
+  insertBreweries: function (breweries) {
+    return db.tx(t=>t.batch(breweries.map(brewery=>t.one(
+      `INSERT INTO lu_brewery (name)
+       VALUES ($1) 
+       RETURNING brewery_id`, [brewery.name]))))
   }
 };
