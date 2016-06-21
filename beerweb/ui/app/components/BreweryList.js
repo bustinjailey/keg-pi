@@ -65,6 +65,7 @@ export default class BreweryList extends React.Component {
         {this.props.breweries.isUiDirty
           ?
          <RaisedButton label="Save" onMouseUp={() => this.props.onSaveNewBreweries(this.props.breweries.newItems)}
+disabled={!this.props.breweries.isUserInputValid}
                        backgroundColor="#a4c639"
                        labelColor="#ffffff"/>
           : <RaisedButton label="Add Brewery" onMouseUp={this.props.onAddBrewery} primary={true}/>}

@@ -30,7 +30,8 @@ function beers(state = [], action) {
 function breweries(state = {
   items: [],
   newItems: [],
-  isUiDirty: false
+  isUiDirty: false,
+  isUserInputValid: false,
 }, action) {
   switch (action.type) {
     case RECEIVE_BREWERIES:
@@ -45,6 +46,7 @@ function breweries(state = {
     case UPDATE_BREWERY:
       let newState = Object.assign({}, state);
       newState.newItems.find(item=>item.brewery_id === action.breweryId).name = action.name;
+      newState.isUserInputValid = newState.newItems.every(item=>item.name !== undefined && item.name.length > 0);
       return newState;
     case PAGE_UNMOUNTED:
       return Object.assign({}, state, {
