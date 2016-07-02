@@ -1,3 +1,4 @@
+import fetch from 'isomorphic-fetch'
 import {shouldFetchArrayType} from './index';
 import {
   POST_BREWERIES_SUCCESS,

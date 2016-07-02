@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import {shouldFetchArrayType} from './index';
 import {
   REQUEST_BEERS,
   RECEIVE_BEERS,
