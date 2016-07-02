@@ -7,7 +7,8 @@ import {
   pageUnmounted,
   postBreweries,
   putBrewery,
-  setRowAsEditable
+  setRowAsEditable,
+  deleteBrewery
 } from '../actions';
 import {PageNames} from '../actions/constants'
 
@@ -42,6 +43,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     onSaveEditedRow: (brewery)=> {
       dispatch(putBrewery(brewery));
+    },
+    onDeleteBrewery: (breweryId) => {
+      dispatch(deleteBrewery(breweryId));
     }
   }
 };

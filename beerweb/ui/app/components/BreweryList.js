@@ -10,6 +10,7 @@ export default class BreweryList extends React.Component {
     onAddRow: React.PropTypes.func.isRequired,
     onBreweryNameChanged: React.PropTypes.func.isRequired,
     onSaveNewBreweries: React.PropTypes.func.isRequired,
+    onDeleteBrewery: React.PropTypes.func.isRequired,
     onComponentUnmount: React.PropTypes.func.isRequired,
     toggleRowEdit: React.PropTypes.func.isRequired,
     onSaveEditedRow: React.PropTypes.func.isRequired
@@ -36,37 +37,8 @@ export default class BreweryList extends React.Component {
     );
 
     let tableRows = [];
-    this.props.breweries.items.forEach((brewery) => {
-      tableRows.push(
-        <TableRow key={brewery.brewery_id}>
-          <TableRowColumn>{brewery.isEditable && brewery.isEditable === true
-            ? <TextField hintText="Brewery name"
-                         onChange={(event, value) => this.props.onBreweryNameChanged(brewery.brewery_id, value, true)}
-                         onBlur={()=> this.props.onSaveEditedRow(brewery)}
-                         value={brewery.name ? brewery.name : ""}/>
-            : brewery.name}</TableRowColumn>
-          <TableRowColumn style={{textAlign: 'right'}}>
-            <IconButton iconClassName="material-icons" onMouseUp={()=>{this.props.toggleRowEdit(brewery.brewery_id)}}>
-              mode_edit
-            </IconButton>
-            <IconButton iconClassName="material-icons">delete_forever</IconButton>
-          </TableRowColumn>
-        </TableRow>
-      )
-    });
-
-    this.props.breweries.newItems.forEach((brewery) => {
-      tableRows.push(
-        <TableRow key={brewery.brewery_id}>
-          <TableRowColumn>
-            <TextField hintText="Brewery name"
-                       onChange={(event, value) => this.props.onBreweryNameChanged(brewery.brewery_id, value, false)}
-                       value={brewery.name ? brewery.name : ""}
-            />
-          </TableRowColumn>
-        </TableRow>
-      )
-    });
+    this.addExistingBreweryRows(tableRows);
+    this.addNewlyAddedBreweryRows(tableRows);
 
     return (
       <div className='list-wrapper'>
@@ -88,6 +60,43 @@ export default class BreweryList extends React.Component {
           : <RaisedButton label="Add Brewery" onMouseUp={this.props.onAddRow} primary={true}/>}
       </div>
     )
+  }
+
+  addExistingBreweryRows(tableRows) {
+    this.props.breweries.items.forEach((brewery) => {
+      tableRows.push(
+        <TableRow key={brewery.brewery_id}>
+          <TableRowColumn>{brewery.isEditable && brewery.isEditable === true
+            ? <TextField hintText="Brewery name"
+                         onChange={(event, value) => this.props.onBreweryNameChanged(brewery.brewery_id, value, true)}
+                         onBlur={()=> this.props.onSaveEditedRow(brewery)}
+                         value={brewery.name ? brewery.name : ""}/>
+            : brewery.name}</TableRowColumn>
+          <TableRowColumn style={{textAlign: 'right'}}>
+            <IconButton iconClassName="material-icons" onMouseUp={()=>{this.props.toggleRowEdit(brewery.brewery_id)}}>
+              mode_edit
+            </IconButton>
+            <IconButton iconClassName="material-icons"
+                        onMouseUp={()=>{this.props.onDeleteBrewery(brewery.brewery_id)}}>delete_forever</IconButton>
+          </TableRowColumn>
+        </TableRow>
+      )
+    });
+  }
+
+  addNewlyAddedBreweryRows(tableRows) {
+    this.props.breweries.newItems.forEach((brewery) => {
+      tableRows.push(
+        <TableRow key={brewery.brewery_id}>
+          <TableRowColumn>
+            <TextField hintText="Brewery name"
+                       onChange={(event, value) => this.props.onBreweryNameChanged(brewery.brewery_id, value, false)}
+                       value={brewery.name ? brewery.name : ""}
+            />
+          </TableRowColumn>
+        </TableRow>
+      )
+    });
   }
 }
 

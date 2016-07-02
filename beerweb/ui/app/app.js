@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
-import Navigation from './components/navigation';
+import Navigation from './components/Navigation';
 import VisibleKegList from './containers/VisibleKegList';
 import VisibleBreweryList from './containers/VisibleBreweryList';
 import VisibleBeerList from './containers/VisibleBeerList';

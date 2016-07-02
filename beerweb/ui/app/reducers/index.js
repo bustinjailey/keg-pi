@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import {breweries, breweryVisibilityFilter} from "./BreweriesReducer";
+import {breweries} from "./BreweriesReducer";
 import {
   RECEIVE_BEERS,
   RECEIVE_BEER_STYLES,
@@ -37,8 +37,7 @@ const rootReducer = combineReducers({
   beers,
   breweries,
   kegs,
-  beerStyles,
-  breweryVisibilityFilter
+  beerStyles
 });
 
 export default rootReducer;
