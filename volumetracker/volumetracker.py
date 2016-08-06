@@ -13,6 +13,9 @@ from keg_dataaccess import KegDataAccess
 from keg_logging import init_logging
 
 VOLUME_PER_CLICK = 0.00225  # volume in liters
+FULL_SIXTH_KEG_VOLUME = 19.8
+FUDGE_FACTOR = 5
+ADJUSTED_VOLUME_PER_CLICK = VOLUME_PER_CLICK * (FULL_SIXTH_KEG_VOLUME / (FULL_SIXTH_KEG_VOLUME + FUDGE_FACTOR))
 FLOW_METER_GPIO_PIN_NUMBER = 23
 DATABASE_UPDATE_INTERVAL = .1  # in seconds
 
@@ -40,7 +43,7 @@ def do_a_click(channel):
         return
 
     last_click_time = time.time()
-    keg.pour(VOLUME_PER_CLICK)
+    keg.pour(ADJUSTED_VOLUME_PER_CLICK)
 
 
 GPIO.add_event_detect(FLOW_METER_GPIO_PIN_NUMBER, GPIO.RISING, callback=do_a_click, bouncetime=20)
