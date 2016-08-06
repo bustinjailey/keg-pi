@@ -5,7 +5,7 @@ Keg Pi is a set of python packages that show how much beer is left in a keg.  Th
 
 Demo:
 
-[![Video of Keg Pi in action](https://img.youtube.com/vi/RwvLITg1bXg/0.jpg)](https://www.youtube.com/watch?v=RwvLITg1bXg)
+[![Video of Keg Pi in action](https://img.youtube.com/vi/wc_Tei4Qvvk/0.jpg)](https://www.youtube.com/watch?v=wc_Tei4Qvvk)
 
 A few photos:
 <div>
