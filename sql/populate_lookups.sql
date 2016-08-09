@@ -16,9 +16,10 @@ INSERT INTO lu_brewery (name)
         WHERE name = 'Golden Road'
     );
 
-INSERT INTO lu_beer (brewery_id, name)
+INSERT INTO lu_beer (brewery_id, name, full_name)
   SELECT
     brewery_id,
+    'Sculpin'
     'Sculpin IPA'
   FROM lu_brewery
   WHERE NOT EXISTS(
@@ -28,10 +29,11 @@ INSERT INTO lu_beer (brewery_id, name)
     )
     AND lu_brewery.name = 'Ballast Point';
 
-INSERT INTO lu_beer (brewery_id, name)
+INSERT INTO lu_beer (brewery_id, name, full_name)
   SELECT
     brewery_id,
-    'Pt. the Way'
+    'Pt. the Way',
+    'Point the Way IPA'
   FROM lu_brewery
   WHERE NOT EXISTS(
       SELECT 1

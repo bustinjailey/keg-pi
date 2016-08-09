@@ -29,6 +29,7 @@ class OledBeerDisplay:
         self.stats_text_y_start_position = 39
         self.beers_remaining_text_area_width = 30
         self.liters_remaining_text_area_width = 68
+        self.liters_remaining_start_position = 60
 
         # SSD1306 library init/setup
         self.oled = SSD1306_128_64(rst=24, i2c_address=0x3C)
@@ -64,12 +65,17 @@ class OledBeerDisplay:
     def draw_liters_remaining(self, liters_remaining):
         formatted_liters_remaining = "{:>5.2f}L".format(liters_remaining)
         w, h = self.draw.textsize(formatted_liters_remaining, self.stats_font)
-        liters_remaining_start_position = 60 + self.liters_remaining_text_area_width - w
+        self.liters_remaining_start_position = 60 + self.liters_remaining_text_area_width - w
 
-        self.draw.text((liters_remaining_start_position, self.stats_text_y_start_position),
+        self.draw.text((self.liters_remaining_start_position, self.stats_text_y_start_position),
                        formatted_liters_remaining,
                        font=self.stats_font,
                        fill=255)
+
+    def clear_liters_remaining(self):
+        self.draw.rectangle([(self.liters_remaining_start_position, self.stats_text_y_start_position),
+                             (self.oled.width, self.oled.height)],
+                            fill=0)
 
     def draw_beer_name(self):
         w, h = self.draw.textsize(str(self.beer_name), self.beer_name_font)
@@ -99,9 +105,6 @@ class OledBeerDisplay:
     def clear_beers_remaining(self):
         self.draw.rectangle([(0, self.stats_text_y_start_position), (30, self.oled.height)], fill=0)
         self.oled.display()
-
-    def clear_liters_remaining(self):
-        self.draw.rectangle([(60, self.stats_text_y_start_position), (self.oled.width, self.oled.height)], fill=0)
 
     def clear_beer_name(self):
         self.draw.rectangle([(0, 0), (self.oled.width, self.oled.height / 2)], fill=0)

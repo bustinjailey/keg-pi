@@ -1,0 +1,32 @@
+@import '../../node_modules/elemental/less/elemental';
+
+.content-wrapper{
+  margin: 50px 15% 100px;
+}
+
+.table-wrapper{
+  margin: 0;
+  color: @base;
+}
+
+.service-row{
+  margin-top: 10px;
+}
+
+/* Mixin */
+@base: #FFFFFF;
+@complement1: spin(@base, 180);
+@complement2: darken(spin(@base, 180), 5%);
+@lighten1: lighten(@base, 15%);
+@lighten2: lighten(@base, 30%);
+
+/* Implementation */
+.one   {color: @base;}
+.two   {color: @complement1;}
+.three {color: @complement2;}
+.four  {color: @lighten1;}
+.five  {color: @lighten2;}
+
+body{
+  background-color: @base
+}

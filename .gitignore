@@ -91,6 +91,7 @@ ENV/
 .DS_Store
 
 .idea
+*.iml
 
 secrets.py
 

@@ -1,0 +1,21 @@
+{
+  "name": "beerweb-server",
+  "version": "1.0.0",
+  "description": "Provides API endpoints for beerweb-ui",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bustinjailey/keg-pi.git"
+  },
+  "author": "Justin Bailey",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4",
+    "pg": "^4.5.6",
+    "pg-promise": "^4.4.6"
+  }
+}
