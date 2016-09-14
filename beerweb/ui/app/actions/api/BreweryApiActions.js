@@ -4,13 +4,11 @@ import {
   POST_BREWERIES_SUCCESS,
   PUT_BREWERY_SUCCESS,
   GET_BREWERIES_SUCCESS,
-  DELETE_BREWERY_SUCCESS
-} from '../constants/ActionTypes';
-
-import {
+  DELETE_BREWERY_SUCCESS,
   ADD_BREWERY,
   UPDATE_BREWERY_NAME_LOCALLY
 } from '../constants/ActionTypes';
+
 
 function receiveBreweries(json) {
   return {

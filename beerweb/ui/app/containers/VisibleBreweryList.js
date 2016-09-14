@@ -7,7 +7,7 @@ import {
   pageUnmounted,
   postBreweries,
   putBrewery,
-  setRowAsEditable,
+  setBreweryAsEditable,
   deleteBrewery
 } from '../actions';
 import {PageNames} from '../actions/constants'
@@ -27,19 +27,19 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(fetchBreweriesIfNeeded());
     },
     onAddRow: ()=> {
-      dispatch(addBrewery())
+      dispatch(addBrewery());
     },
     onBreweryNameChanged: (breweryId, name, isExistingBrewery)=> {
-      dispatch(updateBrewery(breweryId, name, isExistingBrewery))
+      dispatch(updateBrewery(breweryId, name, isExistingBrewery));
     },
     onSaveNewBreweries: (newBreweries)=> {
-      dispatch(postBreweries(newBreweries))
+      dispatch(postBreweries(newBreweries));
     },
     onComponentUnmount: ()=> {
-      dispatch(pageUnmounted(PageNames.BREWERY_LIST))
+      dispatch(pageUnmounted(PageNames.BREWERY_LIST));
     },
-    toggleRowEdit: (breweryId)=> {
-      dispatch(setRowAsEditable(PageNames.BREWERY_LIST, breweryId))
+    onToggleRowEdit: (breweryId)=> {
+      dispatch(setBreweryAsEditable(breweryId));
     },
     onSaveEditedRow: (brewery)=> {
       dispatch(putBrewery(brewery));

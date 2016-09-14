@@ -59,8 +59,8 @@ export default class Navigation extends React.Component {
       <Toolbar>
         <ToolbarGroup firstChild={true}>
           {this.makeRaisedNavButton("Kegs", "/kegs", true)}
-          {this.makeRaisedNavButton("Breweries", "/breweries")}
           {this.makeRaisedNavButton("Beers", "/beers")}
+          {this.makeRaisedNavButton("Breweries", "/breweries")}
         </ToolbarGroup>
         <ToolbarGroup>
           <ToolbarTitle text={this.props.title}/>

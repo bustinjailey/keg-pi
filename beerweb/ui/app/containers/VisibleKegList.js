@@ -1,6 +1,19 @@
 import {connect} from 'react-redux'
 import KegList from '../components/KegList'
-import {fetchBreweriesIfNeeded, fetchBeersIfNeeded, fetchBeerStylesIfNeeded, fetchKegsIfNeeded} from '../actions';
+import {
+  fetchBreweriesIfNeeded,
+  fetchBeersIfNeeded,
+  fetchBeerStylesIfNeeded,
+  fetchKegsIfNeeded,
+  postKegs,
+  addKeg,
+  pageUnmounted,
+  setKegAsEditable,
+  updateKeg,
+  putKeg,
+  deleteKeg
+} from '../actions';
+import {PageNames} from "../actions/constants/PageNames";
 
 const mapStateToProps = (state) => {
   return {
@@ -18,6 +31,33 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(fetchBeerStylesIfNeeded());
       dispatch(fetchBreweriesIfNeeded());
       dispatch(fetchKegsIfNeeded());
+    },
+    onComponentUpdate: ()=> {
+      dispatch(fetchBeersIfNeeded());
+      dispatch(fetchBeerStylesIfNeeded());
+      dispatch(fetchBreweriesIfNeeded());
+      dispatch(fetchKegsIfNeeded());
+    },
+    onComponentUnmount: ()=> {
+      dispatch(pageUnmounted(PageNames.KEG_LIST))
+    },
+    onAddRow: ()=> {
+      dispatch(addKeg());
+    },
+    onSaveNewKegs: (newKegs)=> {
+      dispatch(postKegs(newKegs));
+    },
+    onToggleRowEdit: (kegId)=> {
+      dispatch(setKegAsEditable(kegId));
+    },
+    onKegChanged: (updatedKeg, isExistingKeg)=> {
+      dispatch(updateKeg(updatedKeg, isExistingKeg));
+    },
+    onSaveEditedRow: (keg)=> {
+      dispatch(putKeg(keg));
+    },
+    onDeleteKeg: (kegId)=> {
+      dispatch(deleteKeg(kegId));
     }
   }
 };
