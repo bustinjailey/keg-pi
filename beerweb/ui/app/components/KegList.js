@@ -1,6 +1,7 @@
 import React from 'react';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
-import {RaisedButton, TextField, IconButton} from 'material-ui';
+import {DropDownMenu} from 'material-ui/DropDownMenu';
+import {RaisedButton, TextField, IconButton, MenuItem} from 'material-ui';
 import moment from 'moment';
 
 export default class KegList extends React.Component {
@@ -93,17 +94,36 @@ export default class KegList extends React.Component {
     }
 
     if (keg.isEditable && keg.isEditable === true) {
-      tableRows.push(this.getEditableRow(keg, beerStyleName, breweryName, beerFullName, isExistingKeg));
+      tableRows.push(this.getEditableRow(keg, isExistingKeg));
     } else {
       tableRows.push(this.getReadOnlyRow(keg, beerStyleName, breweryName, beerFullName, isExistingKeg));
     }
   }
 
-  getEditableRow(keg, beerStyleName, breweryName, beerFullName, isExistingKeg) {
+  getBreweryOptionsMenu(selectedBreweryId, keg, isExistingKeg) {
+    let menuItems = [];
+
+    for (let brewery of this.props.breweries.items) {
+      console.log(brewery);
+      menuItems.push(<MenuItem value={brewery.brewery_id} key={brewery.brewery_id} primaryText={brewery.name}/>)
+    }
+    
+    return (
+      <DropDownMenu value={selectedBreweryId} onChange={
+        (event, index, value) => {
+          keg.brewery_id = value;
+          this.props.onKegChanged(keg, isExistingKeg);
+        }}>
+        {menuItems}
+      </DropDownMenu>
+    );
+  }
+
+  getEditableRow(keg, beerStyleName, beerFullName, isExistingKeg) {
     return (
       <TableRow key={keg.keg_id}>
         <TableRowColumn>{moment(keg.last_updated_timestamp).fromNow()}</TableRowColumn>
-        <TableRowColumn>{breweryName}</TableRowColumn>
+        <TableRowColumn>{this.getBreweryOptionsMenu(keg.brewery_id, keg, isExistingKeg)}</TableRowColumn>
         <TableRowColumn>{beerFullName}</TableRowColumn>
         <TableRowColumn>{beerStyleName}</TableRowColumn>
         <TableRowColumn>{keg.current_volume}L</TableRowColumn>
