@@ -107,7 +107,7 @@ export default class KegList extends React.Component {
       console.log(brewery);
       menuItems.push(<MenuItem value={brewery.brewery_id} key={brewery.brewery_id} primaryText={brewery.name}/>)
     }
-    
+
     return (
       <DropDownMenu value={selectedBreweryId} onChange={
         (event, index, value) => {
@@ -119,32 +119,80 @@ export default class KegList extends React.Component {
     );
   }
 
+  getBeerStyleOptionsMenu(selectedBeerStyleId, keg, isExistingKeg) {
+    let menuItems = [];
+
+    for (let beerStyle of this.props.beerStyles) {
+      console.log(beerStyle);
+      menuItems.push(<MenuItem value={beerStyle.beer_style_id} key={beerStyle.beer_style_id} primaryText={beerStyle.name}/>)
+    }
+
+    return (
+      <DropDownMenu value={selectedBeerStyleId} onChange={
+        (event, index, value) => {
+          keg.beer_style_id = value;
+          this.props.onKegChanged(keg, isExistingKeg);
+        }}>
+        {menuItems}
+      </DropDownMenu>
+    );
+  }
+
+
+  getBeerNamesOptionsMenu(selectedBeerId, keg, isExistingKeg) {
+    let menuItems = [];
+
+    for (let beer of this.props.beers) {
+      console.log(beer);
+      menuItems.push(<MenuItem value={beer.beer_id} key={beer.beer_id} primaryText={beer.name}/>)
+    }
+
+    return (
+      <DropDownMenu value={selectedBeerId} onChange={
+        (event, index, value) => {
+          keg.beer_id = value;
+          this.props.onKegChanged(keg, isExistingKeg);
+        }}>
+        {menuItems}
+      </DropDownMenu>
+    );
+  }
+
+
   getEditableRow(keg, beerStyleName, beerFullName, isExistingKeg) {
     return (
       <TableRow key={keg.keg_id}>
         <TableRowColumn>{moment(keg.last_updated_timestamp).fromNow()}</TableRowColumn>
         <TableRowColumn>{this.getBreweryOptionsMenu(keg.brewery_id, keg, isExistingKeg)}</TableRowColumn>
-        <TableRowColumn>{beerFullName}</TableRowColumn>
-        <TableRowColumn>{beerStyleName}</TableRowColumn>
-        <TableRowColumn>{keg.current_volume}L</TableRowColumn>
+        <TableRowColumn>{this.getBeerNamesOptionsMenu(keg.beer_id)}</TableRowColumn>
         <TableRowColumn>
-          <TextField hintText="Max volume"
-                     onChange={
-                       (event, value) => {
-                         keg.max_volume = value;
-                         this.props.onKegChanged(keg, isExistingKeg);
-                       }
-                     }
-                     onBlur={()=> {
-                       if (isExistingKeg) {
-                         this.props.onSaveEditedRow(keg);
-                       }
-                     }}
-                     value={`${keg.max_volume ? keg.max_volume : 0}`}/>
+          {this.getBeerStyleOptionsMenu(keg.beer_style_id)}
+        </TableRowColumn>
+        <TableRowColumn>{
+          this.getEditableTextField("Current volume", keg.current_volume, keg, isExistingKeg)}
+        </TableRowColumn>
+        <TableRowColumn>
+          {this.getEditableTextField("Max volume", keg.max_volume, keg, isExistingKeg)}
         </TableRowColumn>
         {this.getRowActionsColumn(keg)}
       </TableRow>
     );
+  }
+
+  getEditableTextField(title, dataValue, keg, isExistingKeg) {
+    return (<TextField hintText={title}
+                       onChange={
+                         (event, value) => {
+                           dataValue = value;
+                           this.props.onKegChanged(keg, isExistingKeg);
+                         }
+                       }
+                       onBlur={()=> {
+                         if (isExistingKeg) {
+                           this.props.onSaveEditedRow(keg);
+                         }
+                       }}
+                       value={`${dataValue ? dataValue : 0}`}/>);
   }
 
   getReadOnlyRow(keg, beerStyleName, breweryName, beerFullName) {
