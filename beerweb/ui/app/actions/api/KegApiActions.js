@@ -6,7 +6,8 @@ import {
   ADD_KEG,
   POST_KEG_SUCCESS,
   UPDATE_KEG_LOCALLY,
-  DELETE_KEG_SUCCESS
+  DELETE_KEG_SUCCESS,
+  REMOVE_KEG_LOCALLY
 } from '../constants/ActionTypes';
 
 function requestKegs() {
@@ -22,7 +23,7 @@ function receiveKegs(json) {
   }
 }
 
-function fetchKegs() {
+export function fetchKegs() {
   return dispatch => {
     dispatch(requestKegs());
     return fetch('http://localhost:3001/kegs', {method: 'GET'})
@@ -55,6 +56,13 @@ export function fetchKegsIfNeeded() {
 export function addKeg() {
   return {
     type: ADD_KEG
+  }
+}
+
+export function removeUnsavedKeg(kegId) {
+  return {
+    type: REMOVE_KEG_LOCALLY,
+    kegId
   }
 }
 

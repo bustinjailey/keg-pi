@@ -1,6 +1,6 @@
 import {
   PAGE_UNMOUNTED,
-  SET_KEG_AS_EDITABLE,
+  SET_KEG_AS_EDITED,
   SET_BREWERY_AS_EDITABLE
 } from './constants/ActionTypes';
 
@@ -16,7 +16,7 @@ export function pageUnmounted(pageName) {
 
 export function setKegAsEditable(rowId) {
   return {
-    type: SET_KEG_AS_EDITABLE,
+    type: SET_KEG_AS_EDITED,
     pageName: PageNames.KEG_LIST,
     rowId: rowId
   }

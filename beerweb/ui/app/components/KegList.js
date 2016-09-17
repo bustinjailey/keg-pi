@@ -14,9 +14,8 @@ export default class KegList extends React.Component {
     onComponentUpdate: React.PropTypes.func.isRequired,
     onComponentUnmount: React.PropTypes.func.isRequired,
     onAddRow: React.PropTypes.func.isRequired,
-    onSaveNewKegs: React.PropTypes.func.isRequired,
+    onSaveButtonClick: React.PropTypes.func.isRequired,
     onToggleRowEdit: React.PropTypes.func.isRequired,
-    onSaveEditedRow: React.PropTypes.func.isRequired,
     onKegChanged: React.PropTypes.func.isRequired,
     onDeleteKeg: React.PropTypes.func.isRequired
   };
@@ -33,8 +32,8 @@ export default class KegList extends React.Component {
         <TableHeaderColumn>Brewery</TableHeaderColumn>
         <TableHeaderColumn>Beer</TableHeaderColumn>
         <TableHeaderColumn>Style</TableHeaderColumn>
-        <TableHeaderColumn>Remaining Volume</TableHeaderColumn>
-        <TableHeaderColumn>Capacity</TableHeaderColumn>
+        <TableHeaderColumn>Remaining Volume (L)</TableHeaderColumn>
+        <TableHeaderColumn>Capacity (L)</TableHeaderColumn>
         <TableHeaderColumn/>
       </TableRow>
     );
@@ -42,6 +41,9 @@ export default class KegList extends React.Component {
     let tableRows = [];
     this.addExistingKegRows(tableRows);
     this.addUnsavedKegRows(tableRows);
+
+    let newKegs = this.props.kegs.newItems;
+    let editedExistingKegs = this.props.kegs.items.filter(keg=>!!keg.isEdited);
 
     return (
       <div className='list-wrapper'>
@@ -54,9 +56,8 @@ export default class KegList extends React.Component {
           </TableBody>
         </Table>
         <br/>
-        {this.props.kegs.isUiDirty
-          ? <RaisedButton label="Save" onMouseUp={() => this.props.onSaveNewKegs(this.props.kegs.newItems)}
-                          disabled={!this.props.kegs.isUserInputValid}
+        {newKegs.length > 0 || editedExistingKegs.length > 0
+          ? <RaisedButton label="Save" onMouseUp={() => this.props.onSaveButtonClick(newKegs, editedExistingKegs)}
                           backgroundColor="#a4c639"
                           labelColor="#ffffff"/>
           : <RaisedButton label="Add Keg" onMouseUp={this.props.onAddRow} primary={true}/>}
@@ -93,7 +94,8 @@ export default class KegList extends React.Component {
       beerFullName = "";
     }
 
-    if (keg.isEditable && keg.isEditable === true) {
+    //if (keg.isEdited && keg.isEdited === true) {
+    if (!isExistingKeg === true) {
       tableRows.push(this.getEditableRow(keg, isExistingKeg));
     } else {
       tableRows.push(this.getReadOnlyRow(keg, beerStyleName, breweryName, beerFullName, isExistingKeg));
@@ -104,7 +106,6 @@ export default class KegList extends React.Component {
     let menuItems = [];
 
     for (let brewery of this.props.breweries.items) {
-      console.log(brewery);
       menuItems.push(<MenuItem value={brewery.brewery_id} key={brewery.brewery_id} primaryText={brewery.name}/>)
     }
 
@@ -143,8 +144,9 @@ export default class KegList extends React.Component {
     let menuItems = [];
 
     for (let beer of this.props.beers) {
-      console.log(beer);
-      menuItems.push(<MenuItem value={beer.beer_id} key={beer.beer_id} primaryText={beer.name}/>)
+      if(beer.brewery_id === keg.brewery_id){
+        menuItems.push(<MenuItem value={beer.beer_id} key={beer.beer_id} primaryText={beer.name}/>)
+      }
     }
 
     return (
@@ -158,78 +160,94 @@ export default class KegList extends React.Component {
     );
   }
 
+  getBeerStyleName(beerId){
+    let beerStyleId;
+    for (let beer of this.props.beers){
+      if(beer.beer_id === beerId){
+        beerStyleId = beer.beer_style_id;
+        break;
+      }
+    }
 
-  getEditableRow(keg, beerStyleName, beerFullName, isExistingKeg) {
-    return (
-      <TableRow key={keg.keg_id}>
-        <TableRowColumn>{moment(keg.last_updated_timestamp).fromNow()}</TableRowColumn>
-        <TableRowColumn>{this.getBreweryOptionsMenu(keg.brewery_id, keg, isExistingKeg)}</TableRowColumn>
-        <TableRowColumn>{this.getBeerNamesOptionsMenu(keg.beer_id)}</TableRowColumn>
-        <TableRowColumn>
-          {this.getBeerStyleOptionsMenu(keg.beer_style_id)}
-        </TableRowColumn>
-        <TableRowColumn>{
-          this.getEditableTextField("Current volume", keg.current_volume, keg, isExistingKeg)}
-        </TableRowColumn>
-        <TableRowColumn>
-          {this.getEditableTextField("Max volume", keg.max_volume, keg, isExistingKeg)}
-        </TableRowColumn>
-        {this.getRowActionsColumn(keg)}
-      </TableRow>
-    );
+    for (let beerStyle of this.props.beerStyles){
+      if(beerStyle.beer_style_id === beerStyleId){
+        return beerStyle.name;
+      }
+    }
+
+    return "No match";
   }
 
-  getEditableTextField(title, dataValue, keg, isExistingKeg) {
-    return (<TextField hintText={title}
-                       onChange={
-                         (event, value) => {
-                           dataValue = value;
-                           this.props.onKegChanged(keg, isExistingKeg);
-                         }
-                       }
-                       onBlur={()=> {
-                         if (isExistingKeg) {
-                           this.props.onSaveEditedRow(keg);
-                         }
-                       }}
-                       value={`${dataValue ? dataValue : 0}`}/>);
-  }
-
-  getReadOnlyRow(keg, beerStyleName, breweryName, beerFullName) {
+  getReadOnlyRow(keg, beerStyleName, breweryName, beerFullName, isExistingKeg) {
     return (
       <TableRow key={keg.keg_id}>
         <TableRowColumn>{moment(keg.last_updated_timestamp).fromNow()}</TableRowColumn>
         <TableRowColumn>{breweryName}</TableRowColumn>
         <TableRowColumn>{beerFullName}</TableRowColumn>
         <TableRowColumn>{beerStyleName}</TableRowColumn>
-        <TableRowColumn>{keg.current_volume}L</TableRowColumn>
-        <TableRowColumn>{keg.max_volume}L</TableRowColumn>
-        <TableRowColumn style={{textAlign: 'right'}}>
-          {this.getRowActionsColumn(keg)}
-        </TableRowColumn>
+        <TableRowColumn>{keg.current_volume}</TableRowColumn>
+        <TableRowColumn>{keg.max_volume}</TableRowColumn>
+        {this.getRowActionsColumn(keg, isExistingKeg)}
       </TableRow>
     );
   }
 
-  getEditButton(keg) {
-    return (<div>
-        <IconButton iconClassName="material-icons" onMouseUp={()=> {
-          this.props.onToggleRowEdit(keg.keg_id)
-        }}>
-          mode_edit
-        </IconButton>
-        <IconButton iconClassName="material-icons"
-                    onMouseUp={()=> {
-                      this.props.onDeleteKeg(keg.keg_id)
-                    }}>delete_forever</IconButton>
-      </div>
+  getEditableRow(keg, isExistingKeg) {
+    return (
+      <TableRow key={keg.keg_id}>
+        <TableRowColumn>{moment(keg.last_updated_timestamp).fromNow()}</TableRowColumn>
+        <TableRowColumn>{this.getBreweryOptionsMenu(keg.brewery_id, keg, isExistingKeg)}</TableRowColumn>
+        <TableRowColumn>{this.getBeerNamesOptionsMenu(keg.beer_id, keg, isExistingKeg)}</TableRowColumn>
+        <TableRowColumn>{this.getBeerStyleName(keg.beer_id)}</TableRowColumn>
+        <TableRowColumn>{this.getEditableCurrentVolumeTextField(keg, isExistingKeg)}</TableRowColumn>
+        <TableRowColumn>{this.getEditableMaxVolumeTextField(keg, isExistingKeg)}</TableRowColumn>
+        {this.getRowActionsColumn(keg, isExistingKeg)}
+      </TableRow>
     );
   }
 
-  getRowActionsColumn(keg) {
+  getEditableCurrentVolumeTextField(keg, isExistingKeg) {
+    return (<TextField hintText="current volume"
+                       onChange={
+                         (event, value) => {
+                           keg.current_volume = value;
+                           this.props.onKegChanged(keg, isExistingKeg);
+                         }
+                       }
+                       value={`${keg.current_volume ? keg.current_volume: ""}`}/>);
+  }
+
+  getEditableMaxVolumeTextField(keg, isExistingKeg) {
+    return (<TextField hintText="max volume"
+                       onChange={
+                         (event, value) => {
+                           keg.max_volume = value;
+                           this.props.onKegChanged(keg, isExistingKeg);
+                         }
+                       }
+                       value={`${keg.max_volume ? keg.max_volume : ""}`}/>);
+  }
+
+  getRowActionsColumn(keg, isExistingKeg) {
     return (
       <TableRowColumn style={{textAlign: 'right'}}>
-        {this.getEditButton(keg)}
+        <div>
+          <IconButton iconClassName="material-icons"
+                      onMouseUp={()=> {
+                        this.props.onToggleRowEdit(keg.keg_id)
+                      }}>
+            mode_edit
+          </IconButton>
+          {!keg.is_active ?
+            (<IconButton iconClassName="material-icons"
+                         onMouseUp={()=> {
+                           this.props.onDeleteKeg(keg.keg_id, isExistingKeg)
+                         }}>
+              delete_forever
+            </IconButton>)
+            : null
+          }
+      </div>
       </TableRowColumn>
     );
   }

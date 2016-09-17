@@ -3,8 +3,9 @@ import {
   ADD_KEG,
   POST_KEG_SUCCESS,
   PAGE_UNMOUNTED,
-  SET_KEG_AS_EDITABLE,
+  SET_KEG_AS_EDITED,
   UPDATE_KEG_LOCALLY,
+  REMOVE_KEG_LOCALLY,
   PUT_KEG_SUCCESS,
   DELETE_KEG_SUCCESS
 } from "../actions/constants/ActionTypes";
@@ -27,6 +28,14 @@ var removeKegFromState = function (state, action) {
   return newState;
 };
 
+
+var removeUnsavedKegFromState = function (state, action) {
+  let newState = Object.assign({}, state);
+  newState.newItems = state.newItems.filter(keg=>keg.keg_id !== action.kegId);
+  return newState;
+};
+
+
 var replaceStateKegs = function (state, action) {
   return Object.assign({}, state, {
     items: action.kegs
@@ -35,19 +44,17 @@ var replaceStateKegs = function (state, action) {
 
 var addSingleNewKegToState = function (state) {
   return Object.assign({}, state, {
-    isUiDirty: true,
     newItems: [...state.newItems, getBlankKeg()]
   });
 };
 
 var clearAnyUnsavedKegsFromState = function (state) {
   return Object.assign({}, state, {
-    newItems: [],
-    isUiDirty: false
+    newItems: []
   });
 };
 
-var markKegAsEditable = function (state, action) {
+var markKegAsEdited = function (state, action) {
   let stateCopy = Object.assign({}, state);
   let matchingKeg = stateCopy.items.find(item=>item.keg_id === action.rowId);
 
@@ -56,13 +63,14 @@ var markKegAsEditable = function (state, action) {
     matchingKeg = stateCopy.newItems.find(item=>item.keg_id === action.rowId);
   }
 
-  matchingKeg.isEditable = true;
+  matchingKeg.isEdited = true;
   return stateCopy;
 };
 
 var clearKegsFromState = function (state) {
   return Object.assign({}, state, {
-    items: []
+    items: [],
+    newItems: []
   });
 };
 
@@ -72,6 +80,7 @@ var updateKegInState = function (state, action) {
 
   if (action.isExistingKeg) {
     matchingKeg = newState.items.find(item=>item.keg_id === action.kegId);
+    newState.hasEditedExistingKegs = true;
   } else {
     matchingKeg = newState.newItems.find(item=>item.keg_id === action.kegId);
   }
@@ -79,16 +88,12 @@ var updateKegInState = function (state, action) {
   //noinspection JSUnusedAssignment
   matchingKeg = action.updatedKeg;
 
-  newState.isUserInputValid = true; // TODO: fix this
-
   return newState;
 };
 
 export function kegs(state = {
   items: [],
-  newItems: [],
-  isUiDirty: false,
-  isUserInputValid: false
+  newItems: []
 }, action) {
   switch (action.type) {
     case GET_KEGS_SUCCESS:
@@ -97,17 +102,18 @@ export function kegs(state = {
       return addSingleNewKegToState(state);
     case PAGE_UNMOUNTED:
       return clearAnyUnsavedKegsFromState(state);
-    case SET_KEG_AS_EDITABLE:
-      return markKegAsEditable(state, action);
+    case SET_KEG_AS_EDITED:
+      return markKegAsEdited(state, action);
     case POST_KEG_SUCCESS:
       return clearKegsFromState(state);
     case UPDATE_KEG_LOCALLY:
       return updateKegInState(state, action);
     case PUT_KEG_SUCCESS:
-      // Clear out brewery state entirely, so list is refreshed from DB.
       return clearKegsFromState(state);
     case DELETE_KEG_SUCCESS:
       return removeKegFromState(state, action);
+    case REMOVE_KEG_LOCALLY:
+      return removeUnsavedKegFromState(state, action);
     default:
       return state;
   }

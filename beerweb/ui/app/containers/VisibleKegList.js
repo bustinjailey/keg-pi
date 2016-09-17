@@ -5,13 +5,15 @@ import {
   fetchBeersIfNeeded,
   fetchBeerStylesIfNeeded,
   fetchKegsIfNeeded,
+  fetchKegs,
   postKegs,
   addKeg,
   pageUnmounted,
   setKegAsEditable,
   updateKeg,
   putKeg,
-  deleteKeg
+  deleteKeg,
+  removeUnsavedKeg
 } from '../actions';
 import {PageNames} from "../actions/constants/PageNames";
 
@@ -44,8 +46,10 @@ const mapDispatchToProps = (dispatch) => {
     onAddRow: ()=> {
       dispatch(addKeg());
     },
-    onSaveNewKegs: (newKegs)=> {
-      dispatch(postKegs(newKegs));
+    onSaveButtonClick: (newKegs, editedExistingKegs)=> {
+      dispatch(postKegs(newKegs)).then(()=>dispatch(fetchKegs()));
+      // TODO: dispatch putKegs for updated kegs
+
     },
     onToggleRowEdit: (kegId)=> {
       dispatch(setKegAsEditable(kegId));
@@ -53,11 +57,12 @@ const mapDispatchToProps = (dispatch) => {
     onKegChanged: (updatedKeg, isExistingKeg)=> {
       dispatch(updateKeg(updatedKeg, isExistingKeg));
     },
-    onSaveEditedRow: (keg)=> {
-      dispatch(putKeg(keg));
-    },
-    onDeleteKeg: (kegId)=> {
-      dispatch(deleteKeg(kegId));
+    onDeleteKeg: (kegId, isExistingKeg)=> {
+      if(isExistingKeg){
+        dispatch(deleteKeg(kegId, isExistingKeg));
+      } else {
+        dispatch(removeUnsavedKeg(kegId));
+      }
     }
   }
 };
