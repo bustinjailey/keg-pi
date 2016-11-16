@@ -18,3 +18,5 @@ cd ./ui
 npm install
 cd ..
 
+echo 'Installing http-server'
+sudo npm install http-server -g
