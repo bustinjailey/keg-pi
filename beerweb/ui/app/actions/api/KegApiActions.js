@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import {shouldFetchArrayType} from './index';
+import {shouldFetchArrayType, apiHost} from './index';
 import {
   REQUEST_KEGS,
   GET_KEGS_SUCCESS,

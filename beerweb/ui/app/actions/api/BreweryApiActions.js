@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import {shouldFetchArrayType} from './index';
+import {shouldFetchArrayType, apiHost} from './index';
 import {
   POST_BREWERIES_SUCCESS,
   PUT_BREWERY_SUCCESS,
