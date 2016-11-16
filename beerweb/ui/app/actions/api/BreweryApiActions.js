@@ -39,7 +39,7 @@ function breweryDeletedSuccessfully(breweryId) {
 
 function fetchBreweries() {
   return dispatch => {
-    return fetch('http://localhost:3001/breweries', {method: 'GET'})
+    return fetch(`http://${apiHost}:3001/breweries`, {method: 'GET'})
       .then(response => response.json())
       .then(json => dispatch(receiveBreweries(json)));
   }
@@ -55,7 +55,7 @@ export function fetchBreweriesIfNeeded() {
 
 export function postBreweries(breweries) {
   return (dispatch) => {
-    return fetch('http://localhost:3001/breweries', {
+    return fetch(`http://${apiHost}:3001/breweries`, {
       method: 'POST',
       body: JSON.stringify(breweries),
       headers: new Headers({
@@ -68,7 +68,7 @@ export function postBreweries(breweries) {
 
 export function putBrewery(brewery) {
   return (dispatch) => {
-    return fetch(`http://localhost:3001/breweries/${brewery.brewery_id}`, {
+    return fetch(`http://${apiHost}:3001/breweries/${brewery.brewery_id}`, {
       method: 'PUT',
       body: JSON.stringify(brewery),
       headers: new Headers({
@@ -81,7 +81,7 @@ export function putBrewery(brewery) {
 
 export function deleteBrewery(breweryId) {
   return (dispatch) => {
-    return fetch(`http://localhost:3001/breweries/${breweryId}`, {
+    return fetch(`http://${apiHost}:3001/breweries/${breweryId}`, {
       method: 'DELETE'
     })
       .then(dispatch(breweryDeletedSuccessfully(breweryId)));

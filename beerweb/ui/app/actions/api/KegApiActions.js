@@ -26,7 +26,7 @@ function receiveKegs(json) {
 export function fetchKegs() {
   return dispatch => {
     dispatch(requestKegs());
-    return fetch('http://localhost:3001/kegs', {method: 'GET'})
+    return fetch(`http://${apiHost}:3001/kegs`, {method: 'GET'})
       .then(response => response.json())
       .then(json => dispatch(receiveKegs(json)));
   }
@@ -74,7 +74,7 @@ export function postKegs(newKegs) {
   });
 
   return (dispatch) => {
-    return fetch('http://localhost:3001/kegs', {
+    return fetch(`http://${apiHost}:3001/kegs`, {
       method: 'POST',
       body: JSON.stringify(newKegs),
       headers: new Headers({
@@ -87,7 +87,7 @@ export function postKegs(newKegs) {
 
 export function putKeg(updatedKeg) {
   return (dispatch) => {
-    return fetch(`http://localhost:3001/kegs/${updatedKeg.keg_id}`, {
+    return fetch(`http://${apiHost}:3001/kegs/${updatedKeg.keg_id}`, {
       method: 'PUT',
       body: JSON.stringify(updatedKeg),
       headers: new Headers({
@@ -108,7 +108,7 @@ export function updateKeg(updatedKeg, isExistingKeg) {
 
 export function deleteKeg(kegId) {
   return (dispatch) => {
-    return fetch(`http://localhost:3001/kegs/${kegId}`, {
+    return fetch(`http://${apiHost}:3001/kegs/${kegId}`, {
       method: 'DELETE'
     })
       .then(dispatch(kegDeletedSuccessfully(kegId)));
