@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch'
-import {shouldFetchArrayType} from './index';
+import {shouldFetchArrayType, apiHost} from './index';
 import {
   REQUEST_BEERS,
   RECEIVE_BEERS,
@@ -36,7 +36,7 @@ function receiveBeerStyles(json) {
 function fetchBeers() {
   return dispatch => {
     dispatch(requestBeers());
-    return fetch('http://localhost:3001/beers', {method: 'GET'})
+    return fetch(`http://${apiHost}:3001/beers`, {method: 'GET'})
       .then(response => response.json())
       .then(json => dispatch(receiveBeers(json)));
   }
@@ -45,7 +45,7 @@ function fetchBeers() {
 function fetchBeerStyles() {
   return dispatch => {
     dispatch(requestBeerStyles());
-    return fetch('http://localhost:3001/beerStyles', {method: 'GET'})
+    return fetch(`http://${apiHost}:3001/beerStyles`, {method: 'GET'})
       .then(response => response.json())
       .then(json => dispatch(receiveBeerStyles(json)));
   }

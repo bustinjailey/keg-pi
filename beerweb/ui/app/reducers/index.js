@@ -1,24 +1,15 @@
 import {combineReducers} from 'redux'
-import {breweries} from "./BreweriesReducer";
+import {breweries} from "./Breweries";
+import {kegs} from "./Kegs";
 import {
   RECEIVE_BEERS,
-  RECEIVE_BEER_STYLES,
-  RECEIVE_KEGS
+  RECEIVE_BEER_STYLES
 } from "../actions/index";
 
 function beers(state = [], action) {
   switch (action.type) {
     case RECEIVE_BEERS:
       return action.beers;
-    default:
-      return state;
-  }
-}
-
-function kegs(state = [], action) {
-  switch (action.type) {
-    case RECEIVE_KEGS:
-      return action.kegs;
     default:
       return state;
   }

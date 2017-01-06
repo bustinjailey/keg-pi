@@ -6,7 +6,7 @@ var db = pgp(connectionString);
 module.exports = {
   getBreweries: function () {
     // Returns a promise
-    return db.query(`SELECT * FROM lu_brewery ORDER BY brewery_id`);
+    return db.query(`SELECT brewery_id, name FROM lu_brewery ORDER BY brewery_id`);
   },
 
   insertBreweries: function (breweries) {

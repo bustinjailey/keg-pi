@@ -12,7 +12,7 @@ export default class BreweryList extends React.Component {
     onSaveNewBreweries: React.PropTypes.func.isRequired,
     onDeleteBrewery: React.PropTypes.func.isRequired,
     onComponentUnmount: React.PropTypes.func.isRequired,
-    toggleRowEdit: React.PropTypes.func.isRequired,
+    onToggleRowEdit: React.PropTypes.func.isRequired,
     onSaveEditedRow: React.PropTypes.func.isRequired
   };
 
@@ -73,7 +73,7 @@ export default class BreweryList extends React.Component {
                          value={brewery.name ? brewery.name : ""}/>
             : brewery.name}</TableRowColumn>
           <TableRowColumn style={{textAlign: 'right'}}>
-            <IconButton iconClassName="material-icons" onMouseUp={()=>{this.props.toggleRowEdit(brewery.brewery_id)}}>
+            <IconButton iconClassName="material-icons" onMouseUp={()=>{this.props.onToggleRowEdit(brewery.brewery_id)}}>
               mode_edit
             </IconButton>
             <IconButton iconClassName="material-icons"

@@ -3,7 +3,7 @@ import {
   ADD_BREWERY,
   UPDATE_BREWERY_NAME_LOCALLY,
   PAGE_UNMOUNTED,
-  SET_ROW_AS_EDITABLE,
+  SET_BREWERY_AS_EDITABLE,
   PUT_BREWERY_SUCCESS,
   DELETE_BREWERY_SUCCESS
 } from "../actions/constants/ActionTypes";
@@ -83,7 +83,7 @@ export function breweries(state = {
       return updateBreweryNameInState(state, action);
     case PAGE_UNMOUNTED:
       return clearAnyUnsavedBreweriesFromState(state);
-    case SET_ROW_AS_EDITABLE:
+    case SET_BREWERY_AS_EDITABLE:
       return markBreweryAsEditable(state, action);
     case PUT_BREWERY_SUCCESS:
       // Clear out brewery state entirely, so list is refreshed from DB.

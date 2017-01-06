@@ -4,16 +4,16 @@ CREATE TABLE lu_brewery (
 );
 
 CREATE TABLE lu_beer (
-  beer_id    SERIAL PRIMARY KEY,
-  name       TEXT,
-  full_name  TEXT,
-  brewery_id INT REFERENCES lu_brewery (brewery_id),
+  beer_id       SERIAL PRIMARY KEY,
+  name          TEXT,
+  full_name     TEXT,
+  brewery_id    INT REFERENCES lu_brewery (brewery_id),
   beer_style_id INT REFERENCES lu_beer_style (beer_style_id)
 );
 
 CREATE TABLE lu_beer_style (
   beer_style_id SERIAL PRIMARY KEY,
-  NAME          TEXT
+  name          TEXT
 );
 
 CREATE TABLE keg (

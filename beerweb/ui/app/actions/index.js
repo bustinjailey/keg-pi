@@ -1,7 +1,10 @@
 import {
   PAGE_UNMOUNTED,
-  SET_ROW_AS_EDITABLE
+  SET_KEG_AS_EDITED,
+  SET_BREWERY_AS_EDITABLE
 } from './constants/ActionTypes';
+
+import {PageNames} from "./constants/PageNames";
 
 
 export function pageUnmounted(pageName) {
@@ -11,10 +14,18 @@ export function pageUnmounted(pageName) {
   }
 }
 
-export function setRowAsEditable(pageName, rowId) {
+export function setKegAsEditable(rowId) {
   return {
-    type: SET_ROW_AS_EDITABLE,
-    pageName: pageName,
+    type: SET_KEG_AS_EDITED,
+    pageName: PageNames.KEG_LIST,
+    rowId: rowId
+  }
+}
+
+export function setBreweryAsEditable(rowId) {
+  return {
+    type: SET_BREWERY_AS_EDITABLE,
+    pageName: PageNames.BREWERY_LIST,
     rowId: rowId
   }
 }

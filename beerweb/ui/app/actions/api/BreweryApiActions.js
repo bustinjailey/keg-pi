@@ -1,16 +1,14 @@
 import fetch from 'isomorphic-fetch'
-import {shouldFetchArrayType} from './index';
+import {shouldFetchArrayType, apiHost} from './index';
 import {
   POST_BREWERIES_SUCCESS,
   PUT_BREWERY_SUCCESS,
   GET_BREWERIES_SUCCESS,
-  DELETE_BREWERY_SUCCESS
-} from '../constants/ActionTypes';
-
-import {
+  DELETE_BREWERY_SUCCESS,
   ADD_BREWERY,
   UPDATE_BREWERY_NAME_LOCALLY
 } from '../constants/ActionTypes';
+
 
 function receiveBreweries(json) {
   return {
@@ -41,7 +39,7 @@ function breweryDeletedSuccessfully(breweryId) {
 
 function fetchBreweries() {
   return dispatch => {
-    return fetch('http://localhost:3001/breweries', {method: 'GET'})
+    return fetch(`http://${apiHost}:3001/breweries`, {method: 'GET'})
       .then(response => response.json())
       .then(json => dispatch(receiveBreweries(json)));
   }
@@ -57,7 +55,7 @@ export function fetchBreweriesIfNeeded() {
 
 export function postBreweries(breweries) {
   return (dispatch) => {
-    return fetch('http://localhost:3001/breweries', {
+    return fetch(`http://${apiHost}:3001/breweries`, {
       method: 'POST',
       body: JSON.stringify(breweries),
       headers: new Headers({
@@ -70,7 +68,7 @@ export function postBreweries(breweries) {
 
 export function putBrewery(brewery) {
   return (dispatch) => {
-    return fetch(`http://localhost:3001/breweries/${brewery.brewery_id}`, {
+    return fetch(`http://${apiHost}:3001/breweries/${brewery.brewery_id}`, {
       method: 'PUT',
       body: JSON.stringify(brewery),
       headers: new Headers({
@@ -83,7 +81,7 @@ export function putBrewery(brewery) {
 
 export function deleteBrewery(breweryId) {
   return (dispatch) => {
-    return fetch(`http://localhost:3001/breweries/${breweryId}`, {
+    return fetch(`http://${apiHost}:3001/breweries/${breweryId}`, {
       method: 'DELETE'
     })
       .then(dispatch(breweryDeletedSuccessfully(breweryId)));

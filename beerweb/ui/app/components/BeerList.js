@@ -56,11 +56,11 @@ export default class BeerList extends React.Component {
 
     return (
       <div className='list-wrapper'>
-        <Table>
-          <TableHeader>
+        <Table selectable={false}>
+          <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
             {tableHeaderRow}
           </TableHeader>
-          <TableBody>
+          <TableBody displayRowCheckbox={false}>
             {tableRows}
           </TableBody>
         </Table>
