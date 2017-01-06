@@ -1,7 +1,7 @@
 # Keg Pi
 
 ## About
-Keg Pi is a set of python packages that show how much beer is left in a keg.  There are 3 packages that work together to do this: volumetracker, beerstats, and beerweb.  They all share a PostgreSQL instance that is used to keep track of the keg over time.
+Keg Pi is a collection of packages that show how much beer is left in a keg.  There are 3 packages that work together to do this: volumetracker, beerstats, and beerweb.  They all share a PostgreSQL instance that is used to keep track of the keg over time.
 
 Demo:
 
