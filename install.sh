@@ -15,7 +15,7 @@ echo "--> Updating packages"
 apt-get update
 
 echo "--> Installing database"
-apt-get -y install postgresql-9.1 postgresql-server-dev-9.1
+apt-get -y install postgresql-9.4 postgresql-server-dev-9.4
 sudo -u postgres psql -U postgres -d postgres -c "alter user ${DB_USERNAME} with password '${DB_PASSWORD}';"
 service postgresql start
 
@@ -33,7 +33,11 @@ if type "pip${PYTHON_VERSION}" &> /dev/null; then
     PIP_EXECUTABLE="pip${PYTHON_VERSION}"
 elif type "pip-${PYTHON_VERSION}" &> /dev/null; then
     PIP_EXECUTABLE="pip-${PYTHON_VERSION}"
+elif type "pip3" &> /dev/null; then
+    PIP_EXECUTABLE="pip3"
 fi
+
+echo "(executable $PIP_EXECUTABLE)"
 
 eval "${PIP_EXECUTABLE} install Pillow"
 eval "${PIP_EXECUTABLE} install psycopg2"
