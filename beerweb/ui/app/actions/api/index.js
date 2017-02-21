@@ -6,4 +6,4 @@ export function shouldFetchArrayType(arrayFromState) {
   return !!(!arrayFromState || arrayFromState.length === 0);
 }
 
-export const apiHost = "keg-pi.local";
+export const apiHost = "localhost";

@@ -35,16 +35,24 @@ export default class BeerList extends React.Component {
     let tableRows = [];
     if (isDataReady) {
       this.props.beers.forEach((beer) => {
+        let breweryName = this.props.breweries.items.find(brewery =>brewery.brewery_id === beer.brewery_id).name;
+        let beerStyle = this.props.beerStyles.find(style => style.beer_style_id === beer.beer_style_id);
+        let beerStyleName = '';
+
+        if (beerStyle) {
+          beerStyleName = beerStyle.name;
+        }
+
         tableRows.push(
           <TableRow key={beer.beer_id}>
             <TableRowColumn>
-              {this.props.breweries.items.find(brewery =>brewery.brewery_id === beer.brewery_id).name}
+              {breweryName}
             </TableRowColumn>
             <TableRowColumn>
               {beer.full_name}
             </TableRowColumn>
             <TableRowColumn>
-              {this.props.beerStyles.find(style => style.beer_style_id === beer.beer_style_id).name}
+              {beerStyleName}
             </TableRowColumn>
             <TableRowColumn>
               {beer.name}
