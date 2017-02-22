@@ -38,5 +38,17 @@ module.exports = {
 
   deleteKeg: function (kegId) {
     return db.query(`DELETE FROM keg WHERE keg_id = $1`, [kegId]);
+  },
+
+  createNewKeg: function (keg){
+    console.log('');
+    console.log(JSON.stringify(keg));
+
+    return db.query(
+      `UPDATE keg SET is_active = false;
+
+      INSERT INTO keg (max_volume, current_volume, beer_id, created_timestamp, last_updated_timestamp, is_active)
+       VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $4) 
+       RETURNING keg_id`, [keg.max_volume, keg.current_volume, keg.beer_id, keg.is_active]);
   }
 };

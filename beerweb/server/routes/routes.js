@@ -2,6 +2,7 @@ var getKegs = require('./kegs/keg-methods').getKegs;
 var insertKegs = require('./kegs/keg-methods').insertKegs;
 var updateKeg = require('./kegs/keg-methods').updateKeg;
 var deleteKeg = require('./kegs/keg-methods').deleteKeg;
+var createNewKeg = require('./kegs/keg-methods').createNewKeg;
 var getBeerById = require('./beers/beer-methods').getBeerById;
 var getAllBeers = require('./beers/beer-methods').getAllBeers;
 var insertBeers = require('./beers/beer-methods').insertBeers;
@@ -49,6 +50,16 @@ function registerPostMethods(app) {
 
   app.post("/beers", function (request, response) {
     insertBeers(request.body)
+      .then(function (result) {
+        response.send(JSON.stringify(result));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  });
+
+  app.post("/keg", function (request, response) {
+    createNewKeg(request.body)
       .then(function (result) {
         response.send(JSON.stringify(result));
       })
